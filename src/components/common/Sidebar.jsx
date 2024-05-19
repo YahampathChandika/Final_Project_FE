@@ -1,0 +1,123 @@
+import React, { useState } from "react";
+import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
+import "../../assets/css/Sidebar.css";
+import { useNavigate } from "react-router-dom";
+
+function SidebarComp() {
+  const [collapsed, setCollapsed] = useState(false);
+  const [selectedMenuItem, setSelectedMenuItem] = useState();
+  const navigate = useNavigate();
+  const handleMenuItemClick = (menuItem) => {
+    setSelectedMenuItem(menuItem);
+    navigate(menuItem);
+  };
+
+  return (
+    <>
+      <Sidebar
+        collapsed={collapsed}
+        width="200px"
+        collapsedWidth="70px"
+        transitionDuration={500}
+        className="sidebar"
+      >
+        <Menu>
+        <p className="sidebar-title">VITAL WATCH</p>
+
+          {/* <div
+            className="collapse-btn"
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            <span
+              style={{ fontWeight: "600" }}
+              class="material-symbols-outlined sidebar-icon"
+            >
+              menu
+            </span>
+          </div> */}
+          <div className="sidebar-link">
+            <MenuItem
+              className={
+                selectedMenuItem === "overview" ? "selected-menu-item" : ""
+              }
+              icon={
+                <span class="material-symbols-outlined sidebar-icon">home</span>
+              }
+              onClick={() => handleMenuItemClick("overview")}
+            >
+              Overview
+            </MenuItem>
+          </div>
+          <div className="sidebar-link">
+            <MenuItem
+              className={
+                selectedMenuItem === "users"
+                  ? "selected-menu-item"
+                  : ""
+              }
+              icon={
+                <span class="material-symbols-outlined sidebar-icon">
+                  group
+                </span>
+              }
+                onClick={() => handleMenuItemClick("users")}
+            >
+              Users
+            </MenuItem>
+          </div>
+          <div className="sidebar-link">
+            <MenuItem
+              className={
+                selectedMenuItem === "agency" ? "selected-menu-item" : ""
+              }
+              icon={
+                <span class="material-symbols-outlined sidebar-icon">ward</span>
+              }
+              //   onClick={() => handleMenuItemClick("agency")}
+            >
+              Admitted
+            </MenuItem>
+          </div>
+          <div className="sidebar-link">
+            <MenuItem
+              className={
+                selectedMenuItem === "customers" ? "selected-menu-item" : ""
+              }
+              icon={
+                <span class="material-symbols-outlined sidebar-icon">
+                  {/* personal_injury */}
+                  patient_list
+                </span>
+              }
+              //   onClick={() => handleMenuItemClick("customers")}
+            >
+              Patients
+            </MenuItem>
+          </div>
+          <div className="sidebar-link">
+            <MenuItem
+              className={
+                selectedMenuItem === "profile" ? "selected-menu-item" : ""
+              }
+              icon={
+                <span class="material-symbols-outlined sidebar-icon">
+                  account_circle
+                </span>
+              }
+              //   onClick={() => handleMenuItemClick("profile")}
+            >
+              Profile
+            </MenuItem>
+          </div>
+        </Menu>
+        <div className="sidebar-logout">
+          <span class="material-symbols-outlined sidebar-logout-icon">
+            logout
+          </span>
+          <p>Logout</p>
+        </div>
+      </Sidebar>
+    </>
+  );
+}
+export default SidebarComp;
