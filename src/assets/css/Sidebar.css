@@ -4,20 +4,20 @@
 
 .sidebar-title {
   color: #2c3d8f;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 22px;
   text-align: center;
+  margin-top: 20px;
 }
 
 .selected-menu-item {
   .ps-menu-label {
-    font-weight: 700;
+    font-weight: 500;
     color: #5a81fa;
   }
 
   .sidebar-icon {
     color: #5a81fa;
-    font-weight: 500;
   }
 
   .ps-menu-button {
@@ -79,6 +79,7 @@
   width: 100%;
   position: relative;
   overflow: hidden;
+  padding-bottom: 20px;
 }
 
 .sidebar-logout-icon {

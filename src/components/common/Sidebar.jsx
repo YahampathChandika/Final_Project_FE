@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 function SidebarComp() {
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedMenuItem, setSelectedMenuItem] = useState();
+  const [selectedMenuItem, setSelectedMenuItem] = useState("overview");
   const navigate = useNavigate();
   const handleMenuItemClick = (menuItem) => {
     setSelectedMenuItem(menuItem);
@@ -30,7 +30,7 @@ function SidebarComp() {
           >
             <span
               style={{ fontWeight: "600" }}
-              class="material-symbols-outlined sidebar-icon"
+              className="material-symbols-outlined sidebar-icon"
             >
               menu
             </span>
@@ -41,7 +41,7 @@ function SidebarComp() {
                 selectedMenuItem === "overview" ? "selected-menu-item" : ""
               }
               icon={
-                <span class="material-symbols-outlined sidebar-icon">home</span>
+                <span className="material-symbols-outlined sidebar-icon">home</span>
               }
               onClick={() => handleMenuItemClick("overview")}
             >
@@ -56,7 +56,7 @@ function SidebarComp() {
                   : ""
               }
               icon={
-                <span class="material-symbols-outlined sidebar-icon">
+                <span className="material-symbols-outlined sidebar-icon">
                   group
                 </span>
               }
@@ -71,7 +71,7 @@ function SidebarComp() {
                 selectedMenuItem === "agency" ? "selected-menu-item" : ""
               }
               icon={
-                <span class="material-symbols-outlined sidebar-icon">ward</span>
+                <span className="material-symbols-outlined sidebar-icon">ward</span>
               }
               //   onClick={() => handleMenuItemClick("agency")}
             >
@@ -84,7 +84,7 @@ function SidebarComp() {
                 selectedMenuItem === "customers" ? "selected-menu-item" : ""
               }
               icon={
-                <span class="material-symbols-outlined sidebar-icon">
+                <span className="material-symbols-outlined sidebar-icon">
                   {/* personal_injury */}
                   patient_list
                 </span>
@@ -100,7 +100,7 @@ function SidebarComp() {
                 selectedMenuItem === "profile" ? "selected-menu-item" : ""
               }
               icon={
-                <span class="material-symbols-outlined sidebar-icon">
+                <span className="material-symbols-outlined sidebar-icon">
                   account_circle
                 </span>
               }
@@ -111,7 +111,7 @@ function SidebarComp() {
           </div>
         </Menu>
         <div className="sidebar-logout">
-          <span class="material-symbols-outlined sidebar-logout-icon">
+          <span className="material-symbols-outlined sidebar-logout-icon">
             logout
           </span>
           <p>Logout</p>

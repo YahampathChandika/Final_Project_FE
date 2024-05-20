@@ -7,11 +7,19 @@ function Home() {
     <div
       style={{
         display: "flex",
-        backgroundColor: "#F8F9FD"
+        height: "100vh",
+        backgroundColor: "#F8F9FD",
+        overflow: "hidden"
       }}
     >
       <Sidebar />
-      <Outlet />
+      <div style={{
+        flex: 1,
+        overflowY: "auto",
+        padding: "20px 40px"
+      }}>
+        <Outlet />
+      </div>
     </div>
   );
 }
