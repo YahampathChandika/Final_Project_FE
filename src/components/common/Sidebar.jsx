@@ -22,7 +22,7 @@ function SidebarComp() {
         className="sidebar"
       >
         <Menu>
-        <p className="sidebar-title">VITAL WATCH</p>
+          <p className="sidebar-title">VITAL CARE</p>
 
           {/* <div
             className="collapse-btn"
@@ -41,7 +41,9 @@ function SidebarComp() {
                 selectedMenuItem === "overview" ? "selected-menu-item" : ""
               }
               icon={
-                <span className="material-symbols-outlined sidebar-icon">home</span>
+                <span className="material-symbols-outlined sidebar-icon">
+                  home
+                </span>
               }
               onClick={() => handleMenuItemClick("overview")}
             >
@@ -51,16 +53,14 @@ function SidebarComp() {
           <div className="sidebar-link">
             <MenuItem
               className={
-                selectedMenuItem === "users"
-                  ? "selected-menu-item"
-                  : ""
+                selectedMenuItem === "users" ? "selected-menu-item" : ""
               }
               icon={
                 <span className="material-symbols-outlined sidebar-icon">
                   group
                 </span>
               }
-                onClick={() => handleMenuItemClick("users")}
+              onClick={() => handleMenuItemClick("users")}
             >
               Users
             </MenuItem>
@@ -68,12 +68,14 @@ function SidebarComp() {
           <div className="sidebar-link">
             <MenuItem
               className={
-                selectedMenuItem === "agency" ? "selected-menu-item" : ""
+                selectedMenuItem === "admitted" ? "selected-menu-item" : ""
               }
               icon={
-                <span className="material-symbols-outlined sidebar-icon">ward</span>
+                <span className="material-symbols-outlined sidebar-icon">
+                  ward
+                </span>
               }
-              //   onClick={() => handleMenuItemClick("agency")}
+                onClick={() => handleMenuItemClick("admitted")}
             >
               Admitted
             </MenuItem>
@@ -81,7 +83,7 @@ function SidebarComp() {
           <div className="sidebar-link">
             <MenuItem
               className={
-                selectedMenuItem === "customers" ? "selected-menu-item" : ""
+                selectedMenuItem === "patients" ? "selected-menu-item" : ""
               }
               icon={
                 <span className="material-symbols-outlined sidebar-icon">
@@ -89,7 +91,7 @@ function SidebarComp() {
                   patient_list
                 </span>
               }
-              //   onClick={() => handleMenuItemClick("customers")}
+                onClick={() => handleMenuItemClick("patients")}
             >
               Patients
             </MenuItem>
