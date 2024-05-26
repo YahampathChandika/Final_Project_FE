@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import 'rsuite/Table/styles/index.css';
 import 'rsuite/AutoComplete/styles/index.css';
+import 'rsuite/Divider/styles/index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

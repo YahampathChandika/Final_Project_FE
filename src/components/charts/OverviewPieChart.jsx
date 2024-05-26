@@ -25,7 +25,7 @@ export default function OverviewPieChart() {
           },
         },
       },
-    //   colors: ["#FF4560", "#FEB019", "#00E396"], // Custom colors
+      colors: ["#EF4444", "#e6e22e", "#8fb935"], // Custom colors
     },
   });
 
