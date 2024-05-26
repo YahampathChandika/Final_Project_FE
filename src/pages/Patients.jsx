@@ -8,7 +8,7 @@ export default function Patients() {
       <Row className="pb-10 flex justify-between">
         <Row className="flex items-center mb-5">
           <span className="material-symbols-outlined sidebar-icon text-black">
-            group
+            patient_list
           </span>
           <p className="text-2xl font-bold ml-4">Patients</p>
         </Row>
@@ -26,17 +26,9 @@ export default function Patients() {
 
       <Row className="flex-col">
         <Row className="mr-8 w-full bg-white h-14 rounded-md pl-5 flex justify-between items-center">
-          <Row className="min-w-52 flex items-center cursor-pointer">
-            <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 ">
-              add_circle
-            </span>
-            <p className="text-lg font-medium text-txtdarkblue">
-              Add New Patient
-            </p>
-          </Row>
           <InputGroup
             inside
-            className="flex border-2 !w-2/5 min-w-48 h-10 px-3 mx-5 !rounded-full items-center justify-evenly"
+            className="flex border-2 !w-2/5 min-w-48 h-10 px-3 mr-5 !rounded-full items-center justify-evenly"
           >
             <AutoComplete placeholder="Search by Name or ID" />
             <InputGroup.Addon>
@@ -45,8 +37,16 @@ export default function Patients() {
               </span>
             </InputGroup.Addon>
           </InputGroup>
+          <Row className="min-w-52 flex items-center cursor-pointer">
+            <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 ">
+              add_circle
+            </span>
+            <p className="text-lg font-medium text-txtdarkblue">
+              Add New Patient
+            </p>
+          </Row>
         </Row>
-        <Row className="mr-8 w-full flex mt-5 justify-between items-center">
+        <Row className="mr-8 w-full flex mt-6 justify-between items-center">
           <Row className="bg-white w-3/12 h-28 rounded-md py-3 px-5 flex justify-between items-center transform transition-transform duration-300 hover:scale-105 hover:shadow-md cursor-pointer">
             <Col>
               <p className="text-lg font-medium">Total</p>
@@ -83,15 +83,9 @@ export default function Patients() {
               </span>
             </Col>
           </Row>
-          {/* <Row className="flex mr-5 cursor-pointer">
-            <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3">
-              add_circle
-            </span>
-            <p className="text-lg font-medium text-txtdarkblue">Add New User</p>
-          </Row> */}
         </Row>
       </Row>
-      <Row className="bg-white h-96 rounded-md mt-8 flex flex-col">
+      <Row className="bg-white h-96 rounded-md mt-6 flex flex-col">
         <p className="text-lg p-5 font-medium">Patients' Details</p>
         <div className="flex-grow">
           <PatientsTable />

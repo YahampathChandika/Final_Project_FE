@@ -78,7 +78,7 @@ export default function Users() {
             </Row>
           </Row>
         </Row>
-        <Row className="mr-8 w-full flex mt-5 justify-between items-center">
+        <Row className="mr-8 w-full flex mt-6 justify-between items-center">
           <Row className="bg-white w-3/12 h-28 rounded-md py-3 px-5 flex justify-between items-center transform transition-transform duration-300 hover:scale-105 hover:shadow-md cursor-pointer">
             <Col>
               <p className="text-lg font-medium">Admins</p>
@@ -115,16 +115,10 @@ export default function Users() {
               </span>
             </Col>
           </Row>
-          {/* <Row className="flex mr-5 cursor-pointer">
-            <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3">
-              add_circle
-            </span>
-            <p className="text-lg font-medium text-txtdarkblue">Add New User</p>
-          </Row> */}
         </Row>
       </Row>
 
-      <Row className="bg-white h-96 rounded-md mt-8 flex flex-col">
+      <Row className="bg-white h-96 rounded-md mt-6 flex flex-col">
         <p className="text-lg p-5 font-medium">Users' Details</p>
         <div className="flex-grow">
           <UsersTable />

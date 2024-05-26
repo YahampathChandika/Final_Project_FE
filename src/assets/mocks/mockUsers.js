@@ -12,7 +12,7 @@ export const mockUsers = (num) => {
       gender: 'Male',
       sickness: 'Sepsis',
       alerts: 'N/A',
-      status: 'Stable',
+      status: 'Critical',
       role: 'Doctor',
       regNo: 78,
       email: 'matt.dickerson@example.com',
