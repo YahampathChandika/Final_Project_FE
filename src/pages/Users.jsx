@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { AutoComplete, Col, Container, InputGroup, Row } from "rsuite";
 import UsersTable from "../components/tables/UsersTable";
+import AddUserModal from "../components/modals/AddUserModal";
 
 const data = [
   "Eugenia",
@@ -25,12 +26,15 @@ const data = [
 
 export default function Users() {
   const [value, setValue] = useState("");
+  const [userModalOpen, setUserModalOpen] = useState(false);
+  const handleUserModalOpen = () => setUserModalOpen(true);
+  const handleUserModalClose = () => setUserModalOpen(false);
 
   return (
     <Container className="w-full">
       <Row className="pb-10 flex justify-between">
         <Row className="flex items-center mb-5">
-          <span className="material-symbols-outlined sidebar-icon text-black">
+          <span className="material-symbols-outlined text-black">
             group
           </span>
           <p className="text-2xl font-bold ml-4">Users</p>
@@ -68,7 +72,10 @@ export default function Users() {
                 </span>
               </InputGroup.Addon>
             </InputGroup>
-            <Row className="min-w-48 flex ml-8 items-center">
+            <Row
+              className="min-w-48 flex ml-8 items-center"
+              onClick={handleUserModalOpen}
+            >
               <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 ml-6">
                 add_circle
               </span>
@@ -86,7 +93,7 @@ export default function Users() {
               <p className="text-2xl text-txtblue mt-3">02</p>
             </Col>
             <Col>
-              <span class="material-symbols-outlined text-4xl font-light text-txtblue">
+              <span className="material-symbols-outlined text-4xl font-light text-txtblue">
                 admin_panel_settings
               </span>
             </Col>
@@ -98,7 +105,7 @@ export default function Users() {
               <p className="text-2xl text-txtblue mt-3">08</p>
             </Col>
             <Col>
-              <span class="material-symbols-outlined text-4xl font-light text-txtblue">
+              <span className="material-symbols-outlined text-4xl font-light text-txtblue">
                 stethoscope
               </span>
             </Col>
@@ -110,7 +117,7 @@ export default function Users() {
               <p className="text-2xl text-txtblue mt-3">15</p>
             </Col>
             <Col>
-              <span class="material-symbols-outlined text-4xl font-light text-txtblue">
+              <span className="material-symbols-outlined text-4xl font-light text-txtblue">
                 vaccines
               </span>
             </Col>
@@ -124,6 +131,8 @@ export default function Users() {
           <UsersTable />
         </div>
       </Row>
+
+      <AddUserModal open={userModalOpen} handleClose={handleUserModalClose} />
     </Container>
   );
 }

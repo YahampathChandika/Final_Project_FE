@@ -106,7 +106,7 @@ function SidebarComp() {
                   account_circle
                 </span>
               }
-              //   onClick={() => handleMenuItemClick("profile")}
+                onClick={() => handleMenuItemClick("profile")}
             >
               Profile
             </MenuItem>

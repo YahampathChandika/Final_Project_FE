@@ -4,6 +4,7 @@ import Overview from "./pages/Overview";
 import Users from "./pages/Users";
 import Admitted from "./pages/Admitted";
 import Patients from "./pages/Patients";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="users" element={<Users />} />
         <Route path="admitted" element={<Admitted />} />
         <Route path="patients" element={<Patients />} />
+        <Route path="profile" element={<Profile />} />
       </Route>
     </Routes>
   );

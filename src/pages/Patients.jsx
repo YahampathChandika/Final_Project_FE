@@ -54,7 +54,7 @@ export default function Patients() {
               <p className="text-2xl text-txtblue mt-3">02</p>
             </Col>
             <Col>
-              <span class="material-symbols-outlined text-4xl font-light text-txtblue">
+              <span className="material-symbols-outlined text-4xl font-light text-txtblue">
                 ward
               </span>
             </Col>
@@ -66,7 +66,7 @@ export default function Patients() {
               <p className="text-2xl text-txtblue mt-3">08</p>
             </Col>
             <Col>
-              <span class="material-symbols-outlined text-4xl font-light text-txtblue">
+              <span className="material-symbols-outlined text-4xl font-light text-txtblue">
                 inpatient
               </span>
             </Col>
@@ -78,7 +78,7 @@ export default function Patients() {
               <p className="text-2xl text-txtblue mt-3">15</p>
             </Col>
             <Col>
-              <span class="material-symbols-outlined text-4xl font-light text-txtblue">
+              <span className="material-symbols-outlined text-4xl font-light text-txtblue">
                 moving_beds
               </span>
             </Col>

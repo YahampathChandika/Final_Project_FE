@@ -93,7 +93,7 @@ export default function Admitted() {
               </div>
 
               <div className="flex items-center text-txtblue text-lg font-medium">
-                <span class="material-symbols-outlined mr-2">
+                <span className="material-symbols-outlined mr-2">
                   circle_notifications
                 </span>
                 Alerts | {patient.alerts === "N/A" ? "00" : patient.alerts}
@@ -126,7 +126,9 @@ export default function Admitted() {
             <Divider className="text-txtgray" />
             <div className="flex items-center text-txtblue text-lg font-medium">
               Notes
-              <span class="material-symbols-outlined ml-2">description</span>
+              <span className="material-symbols-outlined ml-2">
+                description
+              </span>
             </div>
             <div className="text-txtgray mt-2">
               Has abnormal condition in heart. Check BP regularly.
