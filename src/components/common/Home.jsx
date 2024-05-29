@@ -16,7 +16,7 @@ function Home() {
       <div style={{
         flex: 1,
         overflowY: "auto",
-        padding: "20px 40px"
+        padding: "40px 40px"
       }}>
         <Outlet />
       </div>

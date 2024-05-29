@@ -39,10 +39,6 @@ export default function OverviewTable() {
     }, 500);
   };
 
-  const handleOnRowClick = (rowIndex) => {
-    console.log(rowIndex);
-  };
-
   return (
     <Table
       height={420}
@@ -51,11 +47,10 @@ export default function OverviewTable() {
       sortType={sortType}
       onSortColumn={handleSortColumn}
       loading={loading}
-      onRowClick={handleOnRowClick}
     >
       <Column flexGrow={70} align="center" fixed sortable>
         <HeaderCell>ID</HeaderCell>
-        <Cell dataKey="id" />
+        <Cell dataKey="id"/>
       </Column>
 
       <Column flexGrow={130} fixed sortable>
@@ -83,7 +78,7 @@ export default function OverviewTable() {
         <Cell dataKey="alerts" />
       </Column>
 
-      <Column flexGrow={120} sortable>
+      <Column flexGrow={120}>
         <HeaderCell>Status</HeaderCell>
         <Cell dataKey="status" />
       </Column>

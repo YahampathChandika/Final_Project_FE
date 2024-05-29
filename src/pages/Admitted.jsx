@@ -26,8 +26,7 @@ export default function Admitted() {
         </Row>
       </Row>
 
-      <Row className="flex-col mb-5">
-        <Row className="mr-8 w-full bg-white h-14 rounded-md pl-5 flex justify-between items-center">
+        <Row className="mr-8 w-full bg-white h-20 rounded-md pl-5 flex justify-between items-center">
           <InputGroup
             inside
             className="flex border-2 border-txtdarkblue !w-2/5 min-w-48 h-10 px-3 mr-5 !rounded-full items-center justify-evenly"
@@ -48,9 +47,8 @@ export default function Admitted() {
             </p>
           </Row>
         </Row>
-      </Row>
 
-      <Row className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-5 mb-8">
+      <Row className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 pt-5 mb-8">
         {mockUsers(10).map((patient) => (
           <div
             key={patient.id}

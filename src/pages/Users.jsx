@@ -52,7 +52,7 @@ export default function Users() {
       </Row>
 
       <Row className="flex-col">
-        <Row className="mr-8 w-full bg-white h-14 rounded-md pl-5 flex justify-between items-center">
+        <Row className="mr-8 w-full bg-white h-20 rounded-md pl-5 flex justify-between items-center">
           <p className="text-lg font-medium text-txtgray">20 Users Total</p>
 
           <Row className="flex mr-5 cursor-pointer w-1/2">
