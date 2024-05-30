@@ -10,4 +10,10 @@ body {
 
 .rs-modal-content {
   border-radius: 10px !important;
+  padding: 0 !important;
+}
+
+.rs-modal-body {
+  height: auto !important;
+  max-height: fit-content !important;
 }

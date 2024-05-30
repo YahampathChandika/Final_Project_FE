@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { AutoComplete, Col, Container, InputGroup, Row } from "rsuite";
 import PatientsTable from "../components/tables/PatientsTable";
+import AddPatientModal from "../components/modals/AddPatientModal";
 
 export default function Patients() {
+  const [patientModalOpen, setPatientModalOpen] = useState(false);
+  const handlePatientModalOpen = () => setPatientModalOpen(true);
+  const handlePatientModalClose = () => setPatientModalOpen(false);
+
   return (
     <Container className="w-full">
       <Row className="pb-10 flex justify-between">
@@ -37,7 +42,10 @@ export default function Patients() {
               </span>
             </InputGroup.Addon>
           </InputGroup>
-          <Row className="min-w-52 flex items-center cursor-pointer">
+          <Row
+            className="min-w-52 flex items-center cursor-pointer"
+            onClick={handlePatientModalOpen}
+          >
             <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 ">
               add_circle
             </span>
@@ -91,6 +99,10 @@ export default function Patients() {
           <PatientsTable />
         </div>
       </Row>
+      <AddPatientModal
+        open={patientModalOpen}
+        handleClose={handlePatientModalClose}
+      />
     </Container>
   );
 }

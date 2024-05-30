@@ -36,7 +36,7 @@ const schema = yup.object().shape({
     .required("Password is required"),
 });
 
-export default function AddUserModal({ open, handleClose }) {
+export default function AddPatientModal({ open, handleClose }) {
   const {
     handleSubmit,
     control,
@@ -63,7 +63,7 @@ export default function AddUserModal({ open, handleClose }) {
       <Modal.Body className="!h-auto">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex justify-between items-center !h-16 mt-4 rounded-t-md px-10">
-            <p className="font-semibold text-2xl ">User Registration</p>
+            <p className="font-semibold text-2xl ">Patient Registration</p>
             <div className="border-double border-4 text-txtblue border-slate-100 bg-white rounded-full h-12 w-12 items-center flex justify-center">
               <span className="material-symbols-outlined">person_add</span>
             </div>

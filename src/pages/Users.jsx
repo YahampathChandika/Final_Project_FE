@@ -34,9 +34,7 @@ export default function Users() {
     <Container className="w-full">
       <Row className="pb-10 flex justify-between">
         <Row className="flex items-center mb-5">
-          <span className="material-symbols-outlined text-black">
-            group
-          </span>
+          <span className="material-symbols-outlined text-black">group</span>
           <p className="text-2xl font-bold ml-4">Users</p>
         </Row>
         <Row className="flex">
@@ -55,7 +53,7 @@ export default function Users() {
         <Row className="mr-8 w-full bg-white h-20 rounded-md pl-5 flex justify-between items-center">
           <p className="text-lg font-medium text-txtgray">20 Users Total</p>
 
-          <Row className="flex mr-5 cursor-pointer w-1/2">
+          <Row className="flex mr-5 w-1/2">
             <InputGroup
               inside
               className="flex border-2 min-w-48 h-10 px-3 !rounded-full items-center justify-evenly"
@@ -73,7 +71,7 @@ export default function Users() {
               </InputGroup.Addon>
             </InputGroup>
             <Row
-              className="min-w-48 flex ml-8 items-center"
+              className="min-w-48 flex ml-8 items-center cursor-pointer"
               onClick={handleUserModalOpen}
             >
               <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 ml-6">
