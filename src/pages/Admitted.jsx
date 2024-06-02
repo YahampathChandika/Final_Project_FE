@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { AutoComplete, Col, Container, Divider, InputGroup, Row } from "rsuite";
 import { mockUsers } from "../assets/mocks/mockUsers";
+import UserDetails from "../components/common/UserDetails";
+import AddPatientModal from "../components/modals/AddPatientModal";
 
 export default function Admitted() {
+  const [patientModalOpen, setPatientModalOpen] = useState(false);
+  const handlePatientModalOpen = () => setPatientModalOpen(true);
+  const handlePatientModalClose = () => setPatientModalOpen(false);
+
   return (
     <Container className="w-full">
       <Row className="pb-10 flex justify-between">
@@ -14,39 +20,33 @@ export default function Admitted() {
             Admitted Patients
           </p>
         </Row>
-        <Row className="flex items-center">
-          <img
-            src="https://hips.hearstapps.com/hmg-prod/images/portrait-of-a-happy-young-doctor-in-his-clinic-royalty-free-image-1661432441.jpg?crop=0.66698xw:1xh;center,top&resize=1200:*"
-            className="w-12 h-12 rounded-full mr-5"
-          />
-          <Col>
-            <p className="text-xl font-semibold text-black">Dr. Alice Brown</p>
-            <p className="text-txtgray">Heart Surgeon</p>
-          </Col>
-        </Row>
+        <UserDetails />
       </Row>
 
-        <Row className="mr-8 w-full bg-white h-20 rounded-md pl-5 flex justify-between items-center">
-          <InputGroup
-            inside
-            className="flex border-2 border-txtdarkblue !w-2/5 min-w-48 h-10 px-3 mr-5 !rounded-full items-center justify-evenly"
-          >
-            <AutoComplete placeholder="Search by Name or ID" />
-            <InputGroup.Addon>
-              <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue cursor-pointer">
-                search
-              </span>
-            </InputGroup.Addon>
-          </InputGroup>
-          <Row className="min-w-52 flex items-center cursor-pointer">
-            <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 ">
-              add_circle
+      <Row className="mr-8 w-full bg-white h-20 rounded-md pl-5 flex justify-between items-center">
+        <InputGroup
+          inside
+          className="flex border-2 border-txtdarkblue !w-2/5 min-w-48 h-10 px-3 mr-5 !rounded-full items-center justify-evenly"
+        >
+          <AutoComplete placeholder="Search by Name or ID" />
+          <InputGroup.Addon>
+            <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue cursor-pointer">
+              search
             </span>
-            <p className="text-lg font-medium text-txtdarkblue">
-              Add New Patient
-            </p>
-          </Row>
+          </InputGroup.Addon>
+        </InputGroup>
+        <Row
+          className="min-w-52 flex items-center cursor-pointer"
+          onClick={handlePatientModalOpen}
+        >
+          <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 ">
+            add_circle
+          </span>
+          <p className="text-lg font-medium text-txtdarkblue">
+            Add New Patient
+          </p>
         </Row>
+      </Row>
 
       <Row className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 pt-5 mb-8">
         {mockUsers(10).map((patient) => (
@@ -134,6 +134,10 @@ export default function Admitted() {
           </div>
         ))}
       </Row>
+      <AddPatientModal
+        open={patientModalOpen}
+        handleClose={handlePatientModalClose}
+      />
     </Container>
   );
 }

@@ -2,17 +2,13 @@ import React, { useState } from "react";
 import { Table } from "rsuite";
 import { useGetPatientListQuery } from "../../store/api/patientApi";
 
-export default function PatientsTable() {
+export default function VitalSignsTable() {
   const [sortColumn, setSortColumn] = useState();
   const [sortType, setSortType] = useState();
   const [loading, setLoading] = useState(false);
   const { Column, HeaderCell, Cell } = Table;
 
-  const {
-    data: patientData,
-    isLoading,
-    error,
-  } = useGetPatientListQuery();
+  const { data: patientData, isLoading, error } = useGetPatientListQuery();
 
   console.log(patientData);
 
@@ -33,7 +29,7 @@ export default function PatientsTable() {
         return {
           ...patient,
           bedId: admission.bedId || "N/A",
-          diagnosis: admission.diagnosis || "N/A", 
+          diagnosis: admission.diagnosis || "N/A",
         };
       });
 
@@ -87,38 +83,43 @@ export default function PatientsTable() {
       loading={loading}
       onRowClick={handleOnRowClick}
     >
-      <Column flexGrow={70} align="center" fixed sortable>
-        <HeaderCell>ID</HeaderCell>
-        <Cell dataKey="hospitalId" />
-      </Column>
-
-      <Column flexGrow={130} fixed sortable>
-        <HeaderCell>Name</HeaderCell>
-        <Cell dataKey="firstName" />
-      </Column>
-
-      <Column flexGrow={100} sortable>
-        <HeaderCell>Admitted Date</HeaderCell>
+      <Column flexGrow={120} align="center" fixed sortable>
+        <HeaderCell>Date</HeaderCell>
         <Cell dataKey="createdAt" />
       </Column>
 
-      <Column flexGrow={100} sortable>
-        <HeaderCell>Bed No</HeaderCell>
+      <Column flexGrow={100} fixed sortable>
+        <HeaderCell>Heart Rate</HeaderCell>
+        <Cell dataKey="bedId" />
+      
+      </Column>
+      <Column flexGrow={100} fixed sortable>
+        <HeaderCell>Repository Rate</HeaderCell>
         <Cell dataKey="bedId" />
       </Column>
 
-      <Column flexGrow={200} sortable>
-        <HeaderCell>Diagnosis</HeaderCell>
-        <Cell dataKey="diagnosis" />
+      <Column flexGrow={100} sortable>
+        <HeaderCell>Supplemental O2</HeaderCell>
+        <Cell dataKey="bedId" />
       </Column>
 
       <Column flexGrow={100} sortable>
-        <HeaderCell>Status</HeaderCell>
-        <Cell dataKey="status" />
+        <HeaderCell>Saturation O2</HeaderCell>
+        <Cell dataKey="bedId" />
       </Column>
 
-      <Column flexGrow={120} sortable>
-        <HeaderCell>Actions</HeaderCell>
+      <Column flexGrow={100} sortable>
+        <HeaderCell>Blood Pressure</HeaderCell>
+        <Cell dataKey="bedId" />
+      </Column>
+
+      <Column flexGrow={100} sortable>
+        <HeaderCell>Temperature</HeaderCell>
+        <Cell dataKey="bedId" />
+      </Column>
+
+      <Column flexGrow={100} sortable>
+        <HeaderCell>LOC</HeaderCell>
         <Cell>
           <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 cursor-pointer">
             edit

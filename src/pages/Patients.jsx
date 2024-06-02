@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { AutoComplete, Col, Container, InputGroup, Row } from "rsuite";
 import PatientsTable from "../components/tables/PatientsTable";
 import AddPatientModal from "../components/modals/AddPatientModal";
+import UserDetails from "../components/common/UserDetails";
 
 export default function Patients() {
   const [patientModalOpen, setPatientModalOpen] = useState(false);
@@ -17,16 +18,7 @@ export default function Patients() {
           </span>
           <p className="text-2xl font-bold ml-4">Patients</p>
         </Row>
-        <Row className="flex">
-          <img
-            src="https://hips.hearstapps.com/hmg-prod/images/portrait-of-a-happy-young-doctor-in-his-clinic-royalty-free-image-1661432441.jpg?crop=0.66698xw:1xh;center,top&resize=1200:*"
-            className="w-12 h-12 rounded-full mr-5"
-          />
-          <Col>
-            <p className="text-xl font-semibold">Dr. Alice Brown</p>
-            <p className="text-txtgray">Heart Surgeon</p>
-          </Col>
-        </Row>
+        <UserDetails/>
       </Row>
 
       <Row className="flex-col">

@@ -3,27 +3,24 @@ import { Col, Container, Row } from "rsuite";
 import OverviewLineChart from "../components/charts/OverviewLineChart";
 import OverviewPieChart from "../components/charts/OverviewPieChart";
 import OverviewTable from "../components/tables/OverviewTable";
+import { useGetSignedUserQuery } from "../store/api/userApi";
+import UserDetails from "../components/common/UserDetails";
 
 export default function Overview() {
+  const { data: signedUser } = useGetSignedUserQuery();
+  const user = signedUser?.payload;
   return (
     <Container className="w-full">
       <Row className="pb-10 flex justify-between">
         <Col>
-          <p className="text-2xl font-bold">Welcome, Dr. Alice Brown!</p>
+          <p className="text-2xl font-bold">
+            Welcome, Mr. {user?.firstName} {user?.lastName}!
+          </p>
           <p className="text-txtgray">
             Check the latest updates on your account
           </p>
         </Col>
-        <Row className="flex">
-          <img
-            src="https://hips.hearstapps.com/hmg-prod/images/portrait-of-a-happy-young-doctor-in-his-clinic-royalty-free-image-1661432441.jpg?crop=0.66698xw:1xh;center,top&resize=1200:*"
-            className="w-12 h-12 rounded-full mr-5"
-          />
-          <Col>
-            <p className="text-xl font-semibold">Dr. Alice Brown</p>
-            <p className="text-txtgray">Heart Surgeon</p>
-          </Col>
-        </Row>
+        <UserDetails/>
       </Row>
 
       <Row className="flex">

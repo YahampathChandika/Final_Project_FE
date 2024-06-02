@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { AutoComplete, Col, Container, InputGroup, Row } from "rsuite";
 import UsersTable from "../components/tables/UsersTable";
 import AddUserModal from "../components/modals/AddUserModal";
+import { useGetAllUsersQuery } from "../store/api/userApi";
+import UserDetails from "../components/common/UserDetails";
+
+
 
 const data = [
   "Eugenia",
@@ -24,11 +28,25 @@ const data = [
   "Hilda",
 ];
 
+
 export default function Users() {
   const [value, setValue] = useState("");
   const [userModalOpen, setUserModalOpen] = useState(false);
   const handleUserModalOpen = () => setUserModalOpen(true);
   const handleUserModalClose = () => setUserModalOpen(false);
+  const {
+    data: getAllUsers,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useGetAllUsersQuery();
+
+
+  const data = getAllUsers?.payload?.map((user) => {
+    return `${user.firstName} ${user.lastName}`; 
+  });
+  
 
   return (
     <Container className="w-full">
@@ -37,16 +55,7 @@ export default function Users() {
           <span className="material-symbols-outlined text-black">group</span>
           <p className="text-2xl font-bold ml-4">Users</p>
         </Row>
-        <Row className="flex">
-          <img
-            src="https://hips.hearstapps.com/hmg-prod/images/portrait-of-a-happy-young-doctor-in-his-clinic-royalty-free-image-1661432441.jpg?crop=0.66698xw:1xh;center,top&resize=1200:*"
-            className="w-12 h-12 rounded-full mr-5"
-          />
-          <Col>
-            <p className="text-xl font-semibold">Dr. Alice Brown</p>
-            <p className="text-txtgray">Heart Surgeon</p>
-          </Col>
-        </Row>
+        <UserDetails/>
       </Row>
 
       <Row className="flex-col">
@@ -59,7 +68,7 @@ export default function Users() {
               className="flex border-2 min-w-48 h-10 px-3 !rounded-full items-center justify-evenly"
             >
               <AutoComplete
-                placeholder="Search by Name or ID"
+                placeholder="Search by User's Name"
                 data={data}
                 value={value}
                 onChange={setValue}

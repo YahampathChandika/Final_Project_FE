@@ -1,33 +1,78 @@
 import React, { useState } from "react";
 import { Table } from "rsuite";
-import { mockUsers } from "../../assets/mocks/mockUsers";
+import { useGetAdmittedPatientsQuery } from "../../store/api/patientApi";
+import moment from 'moment';
+
 
 export default function OverviewTable() {
   const [sortColumn, setSortColumn] = useState();
   const [sortType, setSortType] = useState();
   const [loading, setLoading] = useState(false);
   const { Column, HeaderCell, Cell } = Table;
-  const data = mockUsers(10);
+
+  const calculateAge = (dateOfBirth) => {
+    const birthDate = moment(dateOfBirth);
+    const today = moment();
+    const years = today.diff(birthDate, 'years');
+    birthDate.add(years, 'years');
+    const months = today.diff(birthDate, 'months');
+    birthDate.add(months, 'months');
+    const days = today.diff(birthDate, 'days');
+
+    return `${years}Y ${months}M ${days}D`;
+  };
+  
+  
+  const AgeCell = ({ rowData, dataKey, ...props }) => (
+    <Cell {...props}>
+      {calculateAge(rowData[dataKey])}
+    </Cell>
+  );
+  
+  const {
+    data: patientData,
+    isLoading,
+    error,
+  } = useGetAdmittedPatientsQuery();
 
   const getData = () => {
-    if (sortColumn && sortType) {
-      return data.sort((a, b) => {
-        let x = a[sortColumn];
-        let y = b[sortColumn];
-        if (typeof x === "string") {
-          x = x.charCodeAt();
-        }
-        if (typeof y === "string") {
-          y = y.charCodeAt();
-        }
-        if (sortType === "asc") {
-          return x - y;
-        } else {
-          return y - x;
-        }
-      });
+    if (error) {
+      console.error("Error fetching data:", error);
+      return [];
     }
-    return data;
+
+    if (isLoading) {
+      return [];
+    }
+
+    if (patientData && patientData.payload) {
+      const sortedData = [...patientData.payload];
+
+      if (sortColumn && sortType) {
+        sortedData.sort((a, b) => {
+          let x = a[sortColumn];
+          let y = b[sortColumn];
+
+          if (typeof x === "string") {
+            x = x.toLowerCase();
+          }
+          if (typeof y === "string") {
+            y = y.toLowerCase();
+          }
+
+          if (x < y) {
+            return sortType === "asc" ? -1 : 1;
+          }
+          if (x > y) {
+            return sortType === "asc" ? 1 : -1;
+          }
+          return 0;
+        });
+      }
+
+      return sortedData;
+    }
+    return [];
   };
 
   const handleSortColumn = (sortColumn, sortType) => {
@@ -50,17 +95,17 @@ export default function OverviewTable() {
     >
       <Column flexGrow={70} align="center" fixed sortable>
         <HeaderCell>ID</HeaderCell>
-        <Cell dataKey="id"/>
+        <Cell dataKey="hospitalId" />
       </Column>
 
       <Column flexGrow={130} fixed sortable>
         <HeaderCell>Name</HeaderCell>
-        <Cell dataKey="name" />
+        <Cell dataKey="firstName" />
       </Column>
 
       <Column flexGrow={100} sortable>
         <HeaderCell>Age</HeaderCell>
-        <Cell dataKey="age" />
+        <AgeCell dataKey="dateOfBirth" />
       </Column>
 
       <Column flexGrow={100} sortable>
@@ -70,7 +115,7 @@ export default function OverviewTable() {
 
       <Column flexGrow={200} sortable>
         <HeaderCell>Diagnosis</HeaderCell>
-        <Cell dataKey="sickness" />
+        <Cell dataKey="diagnosis" />
       </Column>
 
       <Column flexGrow={100} sortable>
@@ -80,7 +125,7 @@ export default function OverviewTable() {
 
       <Column flexGrow={120}>
         <HeaderCell>Status</HeaderCell>
-        <Cell dataKey="status" />
+        <Cell dataKey="" />
       </Column>
     </Table>
   );

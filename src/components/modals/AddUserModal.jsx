@@ -18,6 +18,11 @@ import {
   InputAdornment,
   OutlinedInput,
 } from "@mui/material";
+import {
+  useAddUserMutation,
+  useGetAllUsersQuery,
+} from "../../store/api/userApi";
+import Swal from "sweetalert2";
 
 const schema = yup.object().shape({
   firstName: yup.string().required("First Name is required"),
@@ -25,14 +30,14 @@ const schema = yup.object().shape({
     .string()
     .email("Invalid email format")
     .required("Email is required"),
-  birthday: yup.date().required("Birthday is required"),
+  // birthday: yup.date().required("Birthday is required"),
   username: yup.string().required("Username is required"),
   lastName: yup.string().required("Last Name is required"),
-  contact: yup.string().required("Contact is required"),
+  contact: yup.string().required("Contact No is required"),
   role: yup.string().required("Role is required"),
   password: yup
     .string()
-    .min(6, "Password must be at least 6 characters")
+    .min(4, "Password must be at least 6 characters")
     .required("Password is required"),
 });
 
@@ -46,16 +51,81 @@ export default function AddUserModal({ open, handleClose }) {
     resolver: yupResolver(schema),
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [profilePic, setProfilePic] = useState("");
+
+  const [addUser] = useAddUserMutation();
+  const { refetch } = useGetAllUsersQuery();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // handleClose();
-    reset();
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setProfilePic(file);
+  };
+
+  const onSubmit = async (data) => {
+    if (!profilePic) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please select a profile picture",
+      });
+      return;
+    } else {
+      const formData = new FormData();
+
+      formData.append("firstName", data.firstName);
+      formData.append("lastName", data.lastName);
+      formData.append("email", data.email);
+      formData.append("speciality", data.speciality);
+      formData.append("username", data.username);
+      formData.append("contactNo", data.contact);
+      formData.append("roleId", data.role);
+      formData.append("password", data.password);
+      formData.append("image", profilePic);
+
+      try {
+        console.log("formData: " + formData);
+        const response = await addUser(formData);
+
+        if (response.data && !response.data.error) {
+          reset();
+          handleClose();
+          refetch();
+          setProfilePic("");
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "success",
+            title: "User Registered Successfully",
+          });
+        } else {
+          console.log("User adding failed", response);
+          Swal.fire({
+            title: "Oops...",
+            text:
+              response?.error?.data?.payload ||
+              response?.data?.payload ||
+              "user registration failed",
+            icon: "error",
+          });
+        }
+      } catch (error) {
+        console.log("User Reg Error", error);
+      }
+    }
   };
 
   return (
@@ -71,71 +141,68 @@ export default function AddUserModal({ open, handleClose }) {
           <Divider className="text-txtgray !mt-2 w-11/12 !mx-auto" />
           <div className="flex justify-between w-full mt-8 px-10 space-x-10">
             <div className="flex-col w-1/2">
-              <Controller
-                name="firstName"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <TextField
-                    // size="small"
-                    {...field}
-                    id="outlined-basic name"
-                    label="First Name"
-                    variant="outlined"
-                    className="!mb-5 w-full"
-                    error={!!errors.firstName}
-                    helperText={
-                      errors.firstName ? errors.firstName.message : ""
-                    }
+              <div className="userregistration-input mb-6 h-32">
+                <label className="flex items-center text-txtgray justify-between px-2 cursor-pointer">
+                  <input
+                    type="file"
+                    accept="image/jpeg, image/png, image/gif"
+                    onChange={handleFileChange}
+                    style={{ display: "none" }}
                   />
-                )}
-              />
+                  {profilePic ? (
+                    <img
+                      src={URL.createObjectURL(profilePic)}
+                      alt="Profile"
+                      className="w-32 h-32 rounded-full"
+                    />
+                  ) : (
+                    <img
+                      src={
+                        "https://toppng.com/uploads/preview/donna-picarro-dummy-avatar-115633298255iautrofxa.png"
+                      }
+                      alt="Profile"
+                      className="profile-image w-32 h-32 rounded-full"
+                    />
+                  )}
+                  Profile Image
+                </label>
+              </div>
               <Controller
-                name="email"
+                name="contact"
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
                   <TextField
-                    // size="small"
                     {...field}
                     id="outlined-basic"
-                    label="Email"
+                    label="Contact No"
                     variant="outlined"
-                    className="!mb-4 w-full"
-                    error={!!errors.email}
-                    helperText={errors.email ? errors.email.message : ""}
+                    className="!mb-5 w-full"
+                    error={!!errors.contact}
+                    helperText={errors.contact ? errors.contact.message : ""}
                   />
                 )}
               />
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DateField", "DateField"]}>
-                  <Controller
-                    name="birthday"
-                    control={control}
-                    defaultValue={null}
-                    render={({ field }) => (
-                      <DateField
-                        // size="small"
-                        {...field}
-                        label="Birthday"
-                        className="!mb-5 w-full"
-                        format="DD-MM-YYYY"
-                        error={!!errors.birthday}
-                        helperText={
-                          errors.birthday ? errors.birthday.message : ""
-                        }
-                      />
-                    )}
+              <Controller
+                name="speciality"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    id="outlined-basic"
+                    label="Speciality"
+                    variant="outlined"
+                    className="!mb-5 w-full"
                   />
-                </DemoContainer>
-              </LocalizationProvider>
+                )}
+              />
               <Controller
                 name="username"
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
                   <TextField
-                    // size="small"
                     {...field}
                     id="outlined-basic"
                     label="Username"
@@ -149,12 +216,29 @@ export default function AddUserModal({ open, handleClose }) {
             </div>
             <div className="flex-col w-1/2 text-right">
               <Controller
+                name="firstName"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    id="outlined-basic name"
+                    label="First Name"
+                    variant="outlined"
+                    className="!mb-5 w-full"
+                    error={!!errors.firstName}
+                    helperText={
+                      errors.firstName ? errors.firstName.message : ""
+                    }
+                  />
+                )}
+              />
+              <Controller
                 name="lastName"
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
                   <TextField
-                    // size="small"
                     {...field}
                     id="outlined-basic"
                     label="Last Name"
@@ -166,19 +250,18 @@ export default function AddUserModal({ open, handleClose }) {
                 )}
               />
               <Controller
-                name="contact"
+                name="email"
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
                   <TextField
-                    // size="small"
                     {...field}
                     id="outlined-basic"
-                    label="Contact"
+                    label="Email"
                     variant="outlined"
-                    className="!mb-5 w-full"
-                    error={!!errors.contact}
-                    helperText={errors.contact ? errors.contact.message : ""}
+                    className="!mb-4 w-full"
+                    error={!!errors.email}
+                    helperText={errors.email ? errors.email.message : ""}
                   />
                 )}
               />
@@ -187,12 +270,11 @@ export default function AddUserModal({ open, handleClose }) {
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
-                  <FormControl className="w-full !mb-5" error={!!errors.role}>
+                  <FormControl className="w-full !mb-5 !text-left" error={!!errors.role}>
                     <InputLabel id="demo-simple-select-label" className="">
                       Role
                     </InputLabel>
                     <Select
-                      // size="small"
                       {...field}
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
@@ -227,7 +309,6 @@ export default function AddUserModal({ open, handleClose }) {
                     </InputLabel>
                     <OutlinedInput
                       {...field}
-                      // size="small"
                       id="outlined-adornment-password"
                       type={showPassword ? "text" : "password"}
                       autoComplete="new-password"
@@ -266,8 +347,9 @@ export default function AddUserModal({ open, handleClose }) {
             <button
               type="button"
               onClick={() => {
-                handleClose();
+                setProfilePic("");
                 reset();
+                handleClose();
               }}
               className="w-1/2 h-10 rounded-md mr-4 border-solid border border-slate-300 hover:bg-slate-200 transition-all duration-300"
             >
