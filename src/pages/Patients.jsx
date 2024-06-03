@@ -18,7 +18,7 @@ export default function Patients() {
           </span>
           <p className="text-2xl font-bold ml-4">Patients</p>
         </Row>
-        <UserDetails/>
+        <UserDetails />
       </Row>
 
       <Row className="flex-col">

@@ -2,11 +2,34 @@ import React, { useState } from "react";
 import UserDetails from "../components/common/UserDetails";
 import { DateRangePicker, Divider } from "rsuite";
 import VitalSignsTable from "../components/tables/VitalSignsTable";
+import { useParams } from "react-router-dom";
+import { useGetPatientByIdQuery } from "../store/api/patientApi";
+import moment from "moment";
+import AddVitalsModal from "../components/modals/AddVitalsModal";
 
-export default function Profile() {
+export default function PatientDetails() {
   const [activeTab, setActiveTab] = useState("upcoming");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [userModalOpen, setUserModalOpen] = useState(false);
+  const handleUserModalOpen = () => setUserModalOpen(true);
+  const handleUserModalClose = () => setUserModalOpen(false);
+  const { id } = useParams();
+  const { data } = useGetPatientByIdQuery(id);
+
+  const patient = data?.payload;
+
+  const calculateAge = (dateOfBirth) => {
+    const birthDate = moment(dateOfBirth);
+    const today = moment();
+    const years = today.diff(birthDate, "years");
+    birthDate.add(years, "years");
+    const months = today.diff(birthDate, "months");
+    birthDate.add(months, "months");
+    const days = today.diff(birthDate, "days");
+
+    return `${years}Y ${months}M ${days}D`;
+  };
 
   const handleDateChange = (value) => {
     if (value) {
@@ -17,7 +40,7 @@ export default function Profile() {
       setEndDate(new Date());
     }
   };
-  
+
   const tabIndicatorStyles = {
     position: "absolute",
     top: "0",
@@ -46,37 +69,47 @@ export default function Profile() {
             <div className="flex w-full justify-between items-center pl-10 pb-3">
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Hospital ID</p>
-                <p className="text-lg font-medium mt-2">1003</p>
+                <p className="text-lg font-medium mt-2">
+                  {patient?.hospitalId}
+                </p>
               </div>
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Name</p>
-                <p className="text-lg font-medium mt-2">1003</p>
+                <p className="text-lg font-medium mt-2">
+                  {patient?.firstName} {patient?.lastName}
+                </p>
               </div>
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Age</p>
-                <p className="text-lg font-medium mt-2">1003</p>
+                <p className="text-lg font-medium mt-2">
+                  {calculateAge(patient?.dateOfBirth)}
+                </p>
               </div>
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Gender</p>
-                <p className="text-lg font-medium mt-2">1003</p>
+                <p className="text-lg font-medium mt-2">{patient?.gender}</p>
               </div>
             </div>
             <div className="flex w-full justify-between items-center pl-10 pt-3">
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Diagnosis</p>
-                <p className="text-lg font-medium mt-2">1003</p>
+                <p className="text-lg font-medium mt-2">{patient?.diagnosis}</p>
               </div>
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Blood Group</p>
-                <p className="text-lg font-medium mt-2">1003</p>
+                <p className="text-lg font-medium mt-2">
+                  {patient?.bloodGroup}
+                </p>
               </div>
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Condition</p>
-                <p className="text-lg font-medium mt-2">1003</p>
+                <p className="text-lg font-medium mt-2">{patient?.status}</p>
               </div>
               <div className="flex-col justify-center items-start w-1/5">
-                <p className="text-txtgray">Guardian's TP</p>
-                <p className="text-lg font-medium mt-2">1003</p>
+                <p className="text-txtgray">Guardian's Contact</p>
+                <p className="text-lg font-medium mt-2">
+                  {patient?.guardianContactNo}
+                </p>
               </div>
             </div>
           </div>
@@ -112,13 +145,15 @@ export default function Profile() {
                   showHeader={false}
                   className="border-none"
                 />
-                <span className="material-symbols-outlined mr-2 ml-10">
-                  heart_plus
-                </span>
-                Add New
+                <div className="flex" onClick={handleUserModalOpen}>
+                  <span className="material-symbols-outlined mr-2 ml-10">
+                    heart_plus
+                  </span>
+                  Add New
+                </div>
               </div>
             </div>
-            <VitalSignsTable/>
+            <VitalSignsTable />
           </div>
         </div>
         <div className="flex-col w-1/4">
@@ -191,6 +226,7 @@ export default function Profile() {
           </div>
         </div>
       </div>
+      <AddVitalsModal open={userModalOpen} handleClose={handleUserModalClose} />
     </div>
   );
 }

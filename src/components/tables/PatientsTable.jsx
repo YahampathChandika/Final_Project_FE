@@ -14,8 +14,6 @@ export default function PatientsTable() {
     error,
   } = useGetPatientListQuery();
 
-  console.log(patientData);
-
   const getData = () => {
     if (error) {
       console.error("Error fetching data:", error);
@@ -73,10 +71,6 @@ export default function PatientsTable() {
     }, 500);
   };
 
-  const handleOnRowClick = (rowIndex) => {
-    console.log(rowIndex);
-  };
-
   return (
     <Table
       height={420}
@@ -85,7 +79,6 @@ export default function PatientsTable() {
       sortType={sortType}
       onSortColumn={handleSortColumn}
       loading={loading}
-      onRowClick={handleOnRowClick}
     >
       <Column flexGrow={70} align="center" fixed sortable>
         <HeaderCell>ID</HeaderCell>

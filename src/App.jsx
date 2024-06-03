@@ -6,6 +6,7 @@ import Admitted from "./pages/Admitted";
 import Patients from "./pages/Patients";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
+import PatientDetails from "./pages/PatientDetails";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="admitted" element={<Admitted />} />
         <Route path="patients" element={<Patients />} />
         <Route path="profile" element={<Profile />} />
+        <Route path="patientDetails/:id" element={<PatientDetails />} />
       </Route>
     </Routes>
   );

@@ -63,10 +63,6 @@ export default function UsersTable() {
     }, 500);
   };
 
-  const handleOnRowClick = (rowIndex) => {
-    console.log(rowIndex);
-  };
-
   const ImageCell = ({ rowData, dataKey, ...props }) => (
     <Cell {...props}>
       <img
@@ -85,7 +81,6 @@ export default function UsersTable() {
       sortType={sortType}
       onSortColumn={handleSortColumn}
       loading={loading}
-      onRowClick={handleOnRowClick}
       rowHeight={55}
     >
       <Column width={60} align="center" fixed>

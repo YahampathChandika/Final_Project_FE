@@ -88,7 +88,6 @@ export default function AddUserModal({ open, handleClose }) {
       formData.append("image", profilePic);
 
       try {
-        console.log("formData: " + formData);
         const response = await addUser(formData);
 
         if (response.data && !response.data.error) {

@@ -16,6 +16,7 @@ import { FormHelperText } from "@mui/material";
 import { useGetAvailableBedsQuery } from "../../store/api/dropDownApi";
 import {
   useCreatePatientMutation,
+  useGetAdmittedPatientsQuery,
   useGetPatientListQuery,
 } from "../../store/api/patientApi";
 import Swal from "sweetalert2";
@@ -36,7 +37,8 @@ const schema = yup.object().shape({
 export default function AddPatientModal({ open, handleClose }) {
   const { data: bedsData } = useGetAvailableBedsQuery();
   const [addPatient] = useCreatePatientMutation();
-  const { refetch } = useGetPatientListQuery();
+  const { refetch: refetchAll } = useGetPatientListQuery();
+  const { refetch: refetchAdmitted} = useGetAdmittedPatientsQuery();
 
   const beds = bedsData?.payload;
   const {
@@ -57,12 +59,11 @@ export default function AddPatientModal({ open, handleClose }) {
 
     try {
       const response = await addPatient(formattedData);
-      console.log("formattedData", formattedData);
-      console.log("response", response);
 
       if (response.data && !response.data.error) {
         reset();
-        refetch();
+        refetchAdmitted();
+        refetchAll();
         handleClose();
         const Toast = Swal.mixin({
           toast: true,

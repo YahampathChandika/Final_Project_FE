@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import { Table } from "rsuite";
-import { useGetPatientListQuery } from "../../store/api/patientApi";
+import { useGetPatientVitalsIdQuery } from "../../store/api/patientApi";
+import { useParams } from "react-router-dom";
 
 export default function VitalSignsTable() {
   const [sortColumn, setSortColumn] = useState();
   const [sortType, setSortType] = useState();
   const [loading, setLoading] = useState(false);
   const { Column, HeaderCell, Cell } = Table;
-
-  const { data: patientData, isLoading, error } = useGetPatientListQuery();
-
-  console.log(patientData);
+  const { id } = useParams();
+  const { data: vitalData, isLoading, error } = useGetPatientVitalsIdQuery(id);
 
   const getData = () => {
     if (error) {
@@ -22,16 +21,8 @@ export default function VitalSignsTable() {
       return [];
     }
 
-    if (patientData && patientData.payload) {
-      const sortedData = patientData.payload.map((patient) => {
-        const { admissions } = patient;
-        const admission = admissions[0] || {};
-        return {
-          ...patient,
-          bedId: admission.bedId || "N/A",
-          diagnosis: admission.diagnosis || "N/A",
-        };
-      });
+    if (vitalData && vitalData.payload) {
+      const sortedData = [...vitalData.payload];
 
       if (sortColumn && sortType) {
         sortedData.sort((a, b) => {
@@ -80,46 +71,61 @@ export default function VitalSignsTable() {
       sortColumn={sortColumn}
       sortType={sortType}
       onSortColumn={handleSortColumn}
-      loading={loading}
+      loading={isLoading}
       onRowClick={handleOnRowClick}
     >
       <Column flexGrow={120} align="center" fixed sortable>
         <HeaderCell>Date</HeaderCell>
-        <Cell dataKey="createdAt" />
+        <Cell dataKey="date" />
+      </Column>
+
+      <Column flexGrow={120} align="center" fixed sortable>
+        <HeaderCell>Time</HeaderCell>
+        <Cell dataKey="time" />
       </Column>
 
       <Column flexGrow={100} fixed sortable>
         <HeaderCell>Heart Rate</HeaderCell>
-        <Cell dataKey="bedId" />
+        <Cell dataKey="heartRate" />
       
       </Column>
       <Column flexGrow={100} fixed sortable>
         <HeaderCell>Repository Rate</HeaderCell>
-        <Cell dataKey="bedId" />
+        <Cell dataKey="respiratoryRate" />
       </Column>
 
       <Column flexGrow={100} sortable>
         <HeaderCell>Supplemental O2</HeaderCell>
-        <Cell dataKey="bedId" />
+        <Cell dataKey="supplementedO2" />
       </Column>
 
       <Column flexGrow={100} sortable>
         <HeaderCell>Saturation O2</HeaderCell>
-        <Cell dataKey="bedId" />
+        <Cell dataKey="O2saturation" />
       </Column>
 
       <Column flexGrow={100} sortable>
-        <HeaderCell>Blood Pressure</HeaderCell>
-        <Cell dataKey="bedId" />
+        <HeaderCell>Systolic Blood Pressure</HeaderCell>
+        <Cell dataKey="systolicBP" />
+      </Column>
+
+      <Column flexGrow={100} sortable>
+        <HeaderCell>Diastolic Blood Pressure</HeaderCell>
+        <Cell dataKey="diastolicBP" />
       </Column>
 
       <Column flexGrow={100} sortable>
         <HeaderCell>Temperature</HeaderCell>
-        <Cell dataKey="bedId" />
+        <Cell dataKey="temperature" />
       </Column>
 
       <Column flexGrow={100} sortable>
         <HeaderCell>LOC</HeaderCell>
+        <Cell dataKey="avpuScore" />
+      </Column>
+
+      <Column flexGrow={100} sortable>
+        <HeaderCell>Actions</HeaderCell>
         <Cell>
           <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 cursor-pointer">
             edit
