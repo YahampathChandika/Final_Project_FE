@@ -1,23 +1,29 @@
 import React, { useState } from "react";
 import UserDetails from "../components/common/UserDetails";
-import { DateRangePicker, Divider } from "rsuite";
+import { Divider } from "rsuite";
+import { DateRangePicker } from "react-date-range";
 import VitalSignsTable from "../components/tables/VitalSignsTable";
 import { useParams } from "react-router-dom";
 import { useGetPatientByIdQuery } from "../store/api/patientApi";
 import moment from "moment";
 import AddVitalsModal from "../components/modals/AddVitalsModal";
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
 export default function PatientDetails() {
   const [activeTab, setActiveTab] = useState("upcoming");
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [userModalOpen, setUserModalOpen] = useState(false);
   const handleUserModalOpen = () => setUserModalOpen(true);
   const handleUserModalClose = () => setUserModalOpen(false);
   const { id } = useParams();
   const { data } = useGetPatientByIdQuery(id);
 
-  const patient = data?.payload;
+  const patientData = data?.payload?.patient;
+  const patientAlerts = data?.payload?.alerts;
+  console.log("alerts", patientAlerts);
+
 
   const calculateAge = (dateOfBirth) => {
     const birthDate = moment(dateOfBirth);
@@ -39,6 +45,23 @@ export default function PatientDetails() {
       setStartDate(new Date());
       setEndDate(new Date());
     }
+  };
+
+  const [selectionRange, setSelectionRange] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+    key: 'selection',
+  });
+
+  const handleSelect = (ranges) => {
+    console.log(ranges);
+    // {
+    //   selection: {
+    //     startDate: [native Date Object],
+    //     endDate: [native Date Object],
+    //   }
+    // }
+    setSelectionRange(ranges.selection);
   };
 
   const tabIndicatorStyles = {
@@ -70,45 +93,51 @@ export default function PatientDetails() {
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Hospital ID</p>
                 <p className="text-lg font-medium mt-2">
-                  {patient?.hospitalId}
+                  {patientData?.hospitalId}
                 </p>
               </div>
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Name</p>
                 <p className="text-lg font-medium mt-2">
-                  {patient?.firstName} {patient?.lastName}
+                  {patientData?.firstName} {patientData?.lastName}
                 </p>
               </div>
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Age</p>
                 <p className="text-lg font-medium mt-2">
-                  {calculateAge(patient?.dateOfBirth)}
+                  {calculateAge(patientData?.dateOfBirth)}
                 </p>
               </div>
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Gender</p>
-                <p className="text-lg font-medium mt-2">{patient?.gender}</p>
+                <p className="text-lg font-medium mt-2">
+                  {patientData?.gender}
+                </p>
               </div>
             </div>
             <div className="flex w-full justify-between items-center pl-10 pt-3">
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Diagnosis</p>
-                <p className="text-lg font-medium mt-2">{patient?.diagnosis}</p>
+                <p className="text-lg font-medium mt-2">
+                  {patientData?.diagnosis}
+                </p>
               </div>
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Blood Group</p>
                 <p className="text-lg font-medium mt-2">
-                  {patient?.bloodGroup}
+                  {patientData?.bloodGroup}
                 </p>
               </div>
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Condition</p>
-                <p className="text-lg font-medium mt-2">{patient?.status}</p>
+                <p className="text-lg font-medium mt-2">
+                  {patientData?.status}
+                </p>
               </div>
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Guardian's Contact</p>
                 <p className="text-lg font-medium mt-2">
-                  {patient?.guardianContactNo}
+                  {patientData?.guardianContactNo}
                 </p>
               </div>
             </div>
@@ -138,13 +167,19 @@ export default function PatientDetails() {
               </div>
 
               <div className="flex items-center text-txtblue text-xl  font-medium cursor-pointer">
-                <DateRangePicker
+                {/* <DateRangePicker
                   value={[startDate, endDate]}
                   onChange={handleDateChange}
-                  showOneCalendar
+                  //   showOneCalendar
+                  placeholder="Select Date Range"
+                  format = "yyyy-MM-dd"
                   showHeader={false}
                   className="border-none"
-                />
+                /> */}
+                {/* <DateRangePicker
+                  ranges={[selectionRange]}
+                  onChange={handleSelect}
+                /> */}
                 <div className="flex" onClick={handleUserModalOpen}>
                   <span className="material-symbols-outlined mr-2 ml-10">
                     heart_plus
@@ -153,7 +188,7 @@ export default function PatientDetails() {
                 </div>
               </div>
             </div>
-            <VitalSignsTable />
+            <VitalSignsTable startDate={startDate} endDate={endDate} />
           </div>
         </div>
         <div className="flex-col w-1/4">

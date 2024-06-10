@@ -3,13 +3,17 @@ import { Table } from "rsuite";
 import { useGetPatientVitalsIdQuery } from "../../store/api/patientApi";
 import { useParams } from "react-router-dom";
 
-export default function VitalSignsTable() {
+export default function VitalSignsTable({startDate, endDate}) {
   const [sortColumn, setSortColumn] = useState();
   const [sortType, setSortType] = useState();
   const [loading, setLoading] = useState(false);
   const { Column, HeaderCell, Cell } = Table;
   const { id } = useParams();
   const { data: vitalData, isLoading, error } = useGetPatientVitalsIdQuery(id);
+
+  // console.log("startDate", startDate)
+  // console.log("endDate", endDate)
+  console.log("vitalData", vitalData)
 
   const getData = () => {
     if (error) {
@@ -124,7 +128,7 @@ export default function VitalSignsTable() {
         <Cell dataKey="avpuScore" />
       </Column>
 
-      <Column flexGrow={100} sortable>
+      {/* <Column flexGrow={100} sortable>
         <HeaderCell>Actions</HeaderCell>
         <Cell>
           <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 cursor-pointer">
@@ -134,7 +138,7 @@ export default function VitalSignsTable() {
             delete
           </span>
         </Cell>
-      </Column>
+      </Column> */}
     </Table>
   );
 }

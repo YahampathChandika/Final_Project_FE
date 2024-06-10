@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "rsuite";
 import "../assets/css/Login.css";
-// import image from "../assets/images/medisense.png";
+import image from "../assets/images/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
@@ -52,13 +52,13 @@ function Login() {
   };
 
   useEffect(() => {
-    document.title = "LogIn | Medisense";
+    document.title = "LogIn | Vital Care";
   }, []);
 
   return (
     <div className="login-main">
       <form className="login-form" onSubmit={handleSubmit(handleLogin)}>
-        {/* <img src={image} alt="Your Image" className="login-image" /> */}
+        <img src={image} alt="Your Image" className="login-image" />
         <input
           type="text"
           className="login-name"
@@ -72,7 +72,7 @@ function Login() {
           {...register("password")}
         />
         <button type="submit" className="login-btn">
-          Login
+          Log In
         </button>
         <div className="login-form-bot">
           <p className="login-form-bot-forgot">Forgot Password</p>

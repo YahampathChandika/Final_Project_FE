@@ -5,8 +5,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-    url("https://images.pexels.com/photos/3394939/pexels-photo-3394939.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4)),
+    url("../images/back.jpg");
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -42,7 +42,8 @@
   margin-top: 40px;
   width: 40%;
   height: 40px;
-  background-color: black !important;
+  color: #ffffff;
+  background-color: #2C3D8F !important;
   border-style: none !important;
   border-radius: 50px !important;
   outline: none !important;

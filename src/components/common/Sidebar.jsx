@@ -2,10 +2,23 @@ import React, { useState } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import "../../assets/css/Sidebar.css";
 import { useNavigate } from "react-router-dom";
+import LogoutModal from "../modals/Logout";
 
 function SidebarComp() {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState("overview");
+  const [LogoutOpen, setLogoutOpen] = useState(false);
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+
+  const handleLogoutOpen = () => {
+    setLogoutModalOpen(true);
+  };
+
+  const handleLogoutClose = () => {
+    setLogoutOpen(false);
+    setLogoutModalOpen(false);
+  };
+
   const navigate = useNavigate();
   const handleMenuItemClick = (menuItem) => {
     setSelectedMenuItem(menuItem);
@@ -75,7 +88,7 @@ function SidebarComp() {
                   ward
                 </span>
               }
-                onClick={() => handleMenuItemClick("admitted")}
+              onClick={() => handleMenuItemClick("admitted")}
             >
               Admitted
             </MenuItem>
@@ -91,7 +104,7 @@ function SidebarComp() {
                   patient_list
                 </span>
               }
-                onClick={() => handleMenuItemClick("patients")}
+              onClick={() => handleMenuItemClick("patients")}
             >
               Patients
             </MenuItem>
@@ -106,19 +119,20 @@ function SidebarComp() {
                   account_circle
                 </span>
               }
-                onClick={() => handleMenuItemClick("profile")}
+              onClick={() => handleMenuItemClick("profile")}
             >
               Profile
             </MenuItem>
           </div>
         </Menu>
-        <div className="sidebar-logout">
+        <div className="sidebar-logout" onClick={handleLogoutOpen}>
           <span className="material-symbols-outlined sidebar-logout-icon">
             logout
           </span>
           <p>Logout</p>
         </div>
       </Sidebar>
+      <LogoutModal open={logoutModalOpen} handleClose={handleLogoutClose}/>
     </>
   );
 }
