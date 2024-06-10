@@ -3,7 +3,7 @@ import { Table } from "rsuite";
 import { useGetPatientVitalsIdQuery } from "../../store/api/patientApi";
 import { useParams } from "react-router-dom";
 
-export default function VitalSignsTable({startDate, endDate}) {
+export default function VitalSignsTable({ startDate, endDate }) {
   const [sortColumn, setSortColumn] = useState();
   const [sortType, setSortType] = useState();
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,7 @@ export default function VitalSignsTable({startDate, endDate}) {
 
   // console.log("startDate", startDate)
   // console.log("endDate", endDate)
-  console.log("vitalData", vitalData)
+  // console.log("vitalData", vitalData);
 
   const getData = () => {
     if (error) {
@@ -77,13 +77,14 @@ export default function VitalSignsTable({startDate, endDate}) {
       onSortColumn={handleSortColumn}
       loading={isLoading}
       onRowClick={handleOnRowClick}
+      headerHeight={70}
     >
-      <Column flexGrow={120} align="center" fixed sortable>
+      <Column flexGrow={100} align="center" fixed sortable>
         <HeaderCell>Date</HeaderCell>
         <Cell dataKey="date" />
       </Column>
 
-      <Column flexGrow={120} align="center" fixed sortable>
+      <Column flexGrow={100} align="center" fixed sortable>
         <HeaderCell>Time</HeaderCell>
         <Cell dataKey="time" />
       </Column>
@@ -91,30 +92,31 @@ export default function VitalSignsTable({startDate, endDate}) {
       <Column flexGrow={100} fixed sortable>
         <HeaderCell>Heart Rate</HeaderCell>
         <Cell dataKey="heartRate" />
-      
       </Column>
       <Column flexGrow={100} fixed sortable>
-        <HeaderCell>Repository Rate</HeaderCell>
+        <HeaderCell>
+          Repository <br /> Rate
+        </HeaderCell>
         <Cell dataKey="respiratoryRate" />
       </Column>
 
       <Column flexGrow={100} sortable>
-        <HeaderCell>Supplemental O2</HeaderCell>
+        <HeaderCell>Supplemental <br /> O2</HeaderCell>
         <Cell dataKey="supplementedO2" />
       </Column>
 
       <Column flexGrow={100} sortable>
-        <HeaderCell>Saturation O2</HeaderCell>
+        <HeaderCell>Saturation <br /> O2</HeaderCell>
         <Cell dataKey="O2saturation" />
       </Column>
 
       <Column flexGrow={100} sortable>
-        <HeaderCell>Systolic Blood Pressure</HeaderCell>
+        <HeaderCell>Systolic <br /> BP</HeaderCell>
         <Cell dataKey="systolicBP" />
       </Column>
 
       <Column flexGrow={100} sortable>
-        <HeaderCell>Diastolic Blood Pressure</HeaderCell>
+        <HeaderCell>Diastolic <br /> BP</HeaderCell>
         <Cell dataKey="diastolicBP" />
       </Column>
 
@@ -128,7 +130,7 @@ export default function VitalSignsTable({startDate, endDate}) {
         <Cell dataKey="avpuScore" />
       </Column>
 
-      {/* <Column flexGrow={100} sortable>
+      <Column flexGrow={80}>
         <HeaderCell>Actions</HeaderCell>
         <Cell>
           <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 cursor-pointer">
@@ -138,7 +140,7 @@ export default function VitalSignsTable({startDate, endDate}) {
             delete
           </span>
         </Cell>
-      </Column> */}
+      </Column>
     </Table>
   );
 }
