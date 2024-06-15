@@ -11,10 +11,6 @@ export default function VitalSignsTable({ startDate, endDate }) {
   const { id } = useParams();
   const { data: vitalData, isLoading, error } = useGetPatientVitalsIdQuery(id);
 
-  // console.log("startDate", startDate)
-  // console.log("endDate", endDate)
-  // console.log("vitalData", vitalData);
-
   const getData = () => {
     if (error) {
       console.error("Error fetching data:", error);
@@ -80,59 +76,67 @@ export default function VitalSignsTable({ startDate, endDate }) {
       headerHeight={70}
     >
       <Column flexGrow={100} align="center" fixed sortable>
-        <HeaderCell>Date</HeaderCell>
-        <Cell dataKey="date" />
+        <HeaderCell align="center">Date</HeaderCell>
+        <Cell align="center" dataKey="date" />
       </Column>
 
       <Column flexGrow={100} align="center" fixed sortable>
-        <HeaderCell>Time</HeaderCell>
-        <Cell dataKey="time" />
+        <HeaderCell align="center">Time</HeaderCell>
+        <Cell align="center" dataKey="time" />
       </Column>
 
       <Column flexGrow={100} fixed sortable>
-        <HeaderCell>Heart Rate</HeaderCell>
-        <Cell dataKey="heartRate" />
+        <HeaderCell align="center">Heart Rate</HeaderCell>
+        <Cell align="center" dataKey="heartRate" />
       </Column>
       <Column flexGrow={100} fixed sortable>
-        <HeaderCell>
+        <HeaderCell align="center">
           Repository <br /> Rate
         </HeaderCell>
-        <Cell dataKey="respiratoryRate" />
+        <Cell align="center" dataKey="respiratoryRate" />
       </Column>
 
       <Column flexGrow={100} sortable>
-        <HeaderCell>Supplemental <br /> O2</HeaderCell>
-        <Cell dataKey="supplementedO2" />
+        <HeaderCell align="center">
+          Supplemental <br /> O2
+        </HeaderCell>
+        <Cell align="center" dataKey="supplementedO2" />
       </Column>
 
       <Column flexGrow={100} sortable>
-        <HeaderCell>Saturation <br /> O2</HeaderCell>
-        <Cell dataKey="O2saturation" />
+        <HeaderCell align="center">
+          Saturation <br /> O2
+        </HeaderCell>
+        <Cell align="center" dataKey="O2saturation" />
       </Column>
 
       <Column flexGrow={100} sortable>
-        <HeaderCell>Systolic <br /> BP</HeaderCell>
-        <Cell dataKey="systolicBP" />
+        <HeaderCell align="center">
+          Systolic <br /> BP
+        </HeaderCell>
+        <Cell align="center" dataKey="systolicBP" />
       </Column>
 
       <Column flexGrow={100} sortable>
-        <HeaderCell>Diastolic <br /> BP</HeaderCell>
-        <Cell dataKey="diastolicBP" />
+        <HeaderCell align="center">
+          Diastolic <br /> BP
+        </HeaderCell>
+        <Cell align="center" dataKey="diastolicBP" />
       </Column>
 
       <Column flexGrow={100} sortable>
-        <HeaderCell>Temperature</HeaderCell>
-        <Cell dataKey="temperature" />
+        <HeaderCell align="center">Temperature</HeaderCell>
+        <Cell align="center" dataKey="temperature" />
       </Column>
 
       <Column flexGrow={100} sortable>
-        <HeaderCell>LOC</HeaderCell>
-        <Cell dataKey="avpuScore" />
+        <HeaderCell align="center">LOC</HeaderCell>
+        <Cell align="center" dataKey="avpuScore" />
       </Column>
 
       <Column flexGrow={80}>
-        <HeaderCell>Actions</HeaderCell>
-        <Cell>
+        <HeaderCell align="center">Actions</HeaderCell>
+        <Cell align="right">
           <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 cursor-pointer">
             edit
           </span>

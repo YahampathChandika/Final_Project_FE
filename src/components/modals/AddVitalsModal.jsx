@@ -10,7 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { FormHelperText } from "@mui/material";
 import Swal from "sweetalert2";
-import { useAddVitalSignsMutation, useGetPatientVitalsIdQuery } from "../../store/api/patientApi";
+import { useAddVitalSignsMutation, useGetPatientByIdQuery, useGetPatientVitalsIdQuery } from "../../store/api/patientApi";
 import { useParams } from "react-router-dom";
 
 const schema = yup.object().shape({
@@ -28,7 +28,9 @@ export default function AddVitalsModal({ open, handleClose }) {
 
   const { id } = useParams();
   const [addVitals] = useAddVitalSignsMutation();
-  const { refetch } = useGetPatientVitalsIdQuery(id);
+  const { refetch:vitalsRefetch } = useGetPatientVitalsIdQuery(id);
+  const { refetch:alertsRefetch } = useGetPatientByIdQuery(id);
+
 
 
   const {
@@ -48,7 +50,8 @@ export default function AddVitalsModal({ open, handleClose }) {
       if (response.data && !response.data.error) {
         reset();
         handleClose();
-        refetch();
+        vitalsRefetch();
+        alertsRefetch();
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",

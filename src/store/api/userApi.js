@@ -20,6 +20,14 @@ export const userApi = api.injectEndpoints({
     getSignedUser: builder.query({
       query: () => "user/getSignedUser",
     }),
+
+    deleteUser: builder.mutation({
+      query: (userId) => ({
+        url: `user/deleteUser/${userId}`,
+        method: "DELETE",
+      }),
+    }),
+
   }),
 });
 
@@ -27,4 +35,5 @@ export const {
   useAddUserMutation,
   useGetAllUsersQuery,
   useGetSignedUserQuery,
+  useDeleteUserMutation,
 } = userApi;

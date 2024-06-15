@@ -278,8 +278,8 @@ import { useParams } from "react-router-dom";
 import { useGetPatientByIdQuery } from "../store/api/patientApi";
 import moment from "moment";
 import AddVitalsModal from "../components/modals/AddVitalsModal";
-import "react-date-range/dist/styles.css"; // main style file
-import "react-date-range/dist/theme/default.css"; // theme css file
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
 import VitalSignsChart from "../components/charts/VitalSignsChart";
 
 export default function PatientDetails() {
@@ -294,6 +294,7 @@ export default function PatientDetails() {
 
   const patientData = data?.payload?.patient;
   const patientAlerts = data?.payload?.alerts;
+  const patientCondition = data?.payload?.condition;
   const borderlineAlerts =  patientAlerts?.borderlineAlerts;
   const criticalAlerts =  patientAlerts?.criticalAlerts;
 
@@ -401,7 +402,7 @@ export default function PatientDetails() {
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Condition</p>
                 <p className="text-lg font-medium mt-2">
-                  {patientData?.status}
+                  {patientCondition}
                 </p>
               </div>
               <div className="flex-col justify-center items-start w-1/5">
@@ -466,7 +467,7 @@ export default function PatientDetails() {
                 </span>
                 Alerts | 0
                 {patientAlerts?.totalAlertCount === "N/A"
-                  ? "00"
+                  ? "0"
                   : patientAlerts?.totalAlertCount}
               </div>
             </div>

@@ -65,7 +65,7 @@ export default function Admitted() {
       </Row>
 
       <Row className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 pt-5 mb-8">
-        {patients?.payload.map((patient) => (
+        {patients?.payload?.patientsList.map((patient) => (
           <Link to={`/home/patientDetails/${patient.id}`}>
             <div
               key={patient.id}
@@ -75,35 +75,35 @@ export default function Admitted() {
                 <div className="flex items-center">
                   <span
                     className={`material-symbols-outlined mr-2 ${
-                      patient.status === "Critical"
+                      patient.condition === "Critical"
                         ? "text-red"
-                        : patient.status === "Unstable"
+                        : patient.condition === "Unstable"
                         ? "text-yellow"
-                        : patient.status === "Stable"
+                        : patient.condition === "Stable"
                         ? "text-green"
                         : ""
                     }`}
                   >
-                    {patient.status === "Critical"
+                    {patient.condition === "Critical"
                       ? "error"
-                      : patient.status === "Unstable"
+                      : patient.condition === "Unstable"
                       ? "sync_problem"
-                      : patient.status === "Stable"
+                      : patient.condition === "Stable"
                       ? "check_circle"
                       : ""}
                   </span>
                   <span
                     className={`text-lg font-medium ${
-                      patient.status === "Critical"
+                      patient.condition === "Critical"
                         ? "text-red"
-                        : patient.status === "Unstable"
+                        : patient.condition === "Unstable"
                         ? "text-yellow"
-                        : patient.status === "Stable"
+                        : patient.condition === "Stable"
                         ? "text-green"
                         : ""
                     }`}
                   >
-                    {patient.status}
+                    {patient.condition}
                   </span>
                 </div>
 
@@ -111,7 +111,7 @@ export default function Admitted() {
                   <span className="material-symbols-outlined mr-2">
                     circle_notifications
                   </span>
-                  Alerts | {patient.alerts === "N/A" ? "00" : patient.alerts}
+                  Alerts | 0{patient.alertCount === "N/A" ? "0" : patient.alertCount}
                 </div>
               </div>
               <div>
@@ -125,7 +125,7 @@ export default function Admitted() {
               <div className="flex mt-5 justify-between">
                 <div className="flex-col">
                   <p className="text-txtgray">Bed No</p>
-                  <p className="text-lg font-medium">00</p>
+                  <p className="text-lg font-medium">0{patient.bedNo}</p>
                 </div>
                 <div className="flex-col text-right">
                   <p className="text-txtgray">Diagnosis</p>

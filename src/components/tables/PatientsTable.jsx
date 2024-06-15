@@ -17,14 +17,14 @@ export default function PatientsTable() {
   const getData = () => {
     if (error) {
       console.error("Error fetching data:", error);
-      return [];
+      return [];      
     }
 
     if (isLoading) {
       return [];
     }
 
-    if (patientData && patientData.payload) {
+    if (patientData && patientData?.payload) {
       const sortedData = patientData.payload.map((patient) => {
         const { admissions } = patient;
         const admission = admissions[0] || {};

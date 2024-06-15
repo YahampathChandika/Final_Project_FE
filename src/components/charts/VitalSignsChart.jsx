@@ -8,14 +8,15 @@ export default function VitalSignsChart() {
   const { data: vitalData, isLoading, error } = useGetPatientVitalsIdQuery(id);
 
   const vitalSigns = [
-    { name: "heartRate", color: "#FF5733" },
-    { name: "respiratoryRate", color: "#33FF57" },
-    { name: "supplementedO2", color: "#3357FF" },
-    { name: "O2saturation", color: "#FF33A8" },
-    { name: "temperature", color: "#FFC300" },
-    { name: "systolicBP", color: "#DAF7A6" },
-    { name: "diastolicBP", color: "#900C3F" },
+    { name: "heartRate", color: "#5A81FA" },
+    { name: "respiratoryRate", color: "#5A81FA" },
+    { name: "supplementedO2", color: "#5A81FA" },
+    { name: "O2saturation", color: "#5A81FA" },
+    { name: "temperature", color: "#5A81FA" },
+    { name: "systolicBP", color: "#5A81FA" },
+    { name: "diastolicBP", color: "#5A81FA" },
   ];
+
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
@@ -42,11 +43,17 @@ export default function VitalSignsChart() {
               enabled: false,
             },
             stroke: {
-              curve: "straight",
+              // curve: "smooth",
+              curve: 'straight',
             },
             title: {
-              text: `${sign.name.charAt(0).toUpperCase() + sign.name.slice(1)} Trends`,
-              align: 'left'
+              text: `${sign.name.charAt(0).toUpperCase() + sign.name.slice(1)}`,
+              align: "left",
+              style: {
+                fontSize: "17px",
+                fontFamily: "Poppins",
+                fontWeight: "600",
+              },
             },
             colors: [sign.color],
             grid: {
@@ -79,7 +86,10 @@ export default function VitalSignsChart() {
   return (
     <div className="grid grid-cols-2 gap-8">
       {chartData.map((chart, index) => (
-        <div key={index} className="flex-col w-full bg-white rounded-md justify-between items-center px-5 py-3">
+        <div
+          key={index}
+          className="flex-col w-full bg-white rounded-md justify-between items-center px-5 py-3"
+        >
           <ReactApexChart
             options={chart.options}
             series={chart.series}
