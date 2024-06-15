@@ -295,12 +295,12 @@ export default function PatientDetails() {
   const patientData = data?.payload?.patient;
   const patientAlerts = data?.payload?.alerts;
   const patientCondition = data?.payload?.condition;
-  const borderlineAlerts =  patientAlerts?.borderlineAlerts;
-  const criticalAlerts =  patientAlerts?.criticalAlerts;
+  const borderlineAlerts = patientAlerts?.borderlineAlerts || [];
+  const criticalAlerts = patientAlerts?.criticalAlerts || [];
 
-  console.log("patientAlerts", patientAlerts);
-  console.log("borderlineAlerts", borderlineAlerts);
-  console.log("criticalAlerts", criticalAlerts);
+  // console.log("patientAlerts", patientAlerts);
+  // console.log("borderlineAlerts", borderlineAlerts);
+  // console.log("criticalAlerts", criticalAlerts);
 
   const calculateAge = (dateOfBirth) => {
     const birthDate = moment(dateOfBirth);
@@ -401,9 +401,7 @@ export default function PatientDetails() {
               </div>
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Condition</p>
-                <p className="text-lg font-medium mt-2">
-                  {patientCondition}
-                </p>
+                <p className="text-lg font-medium mt-2">{patientCondition}</p>
               </div>
               <div className="flex-col justify-center items-start w-1/5">
                 <p className="text-txtgray">Guardian's Contact</p>
@@ -447,15 +445,12 @@ export default function PatientDetails() {
                 Add New
               </div>
             </div>
-            
           </div>
-          {/* <div className=""> */}
-              {activeTab === "table" ? (
-                <VitalSignsTable startDate={startDate} endDate={endDate} />
-              ) : (
-                <VitalSignsChart />
-              )}
-            {/* </div> */}
+          {activeTab === "table" ? (
+            <VitalSignsTable startDate={startDate} endDate={endDate} />
+          ) : (
+            <VitalSignsChart />
+          )}
         </div>
         <div className="flex-col w-1/4">
           <div className="flex-col w-full bg-white rounded-md justify-between items-center p-6">
@@ -473,25 +468,49 @@ export default function PatientDetails() {
             </div>
             <Divider className="text-txtgray !mt-3 !mb-5" />
             {criticalAlerts?.map((alert, index) => (
-              <div key={index} className="flex justify-between mt-4">
-                <div className="flex">
-                  <span className="material-symbols-outlined text-red">
-                    keyboard_double_arrow_up
-                  </span>
-                  <p className="font-medium ml-2">{alert.name}</p>
-                </div>
-                <p className="text-txtgray font-medium ml-2">{alert.value}</p>
+              <div key={index}>
+                {Object.values(alert).map((vital, idx) => (
+                  <div key={idx} className="flex justify-between mt-4">
+                    <div className="flex">
+                      {vital?.status == "high" ? (
+                        <span className="material-symbols-outlined text-red">
+                          keyboard_double_arrow_up
+                        </span>
+                      ) : (
+                        <span className="material-symbols-outlined text-red">
+                          keyboard_double_arrow_down
+                        </span>
+                      )}
+                      <p className="font-medium ml-2">{vital.name}</p>
+                    </div>
+                    <p className="text-txtgray font-medium ml-2">
+                      {vital.text} | {vital.value}
+                    </p>
+                  </div>
+                ))}
               </div>
             ))}
             {borderlineAlerts?.map((alert, index) => (
-              <div key={index} className="flex justify-between mt-4">
-                <div className="flex">
-                  <span className="material-symbols-outlined text-yellow">
-                    keyboard_arrow_up
-                  </span>
-                  <p className="font-medium ml-2">{alert.name}</p>
-                </div>
-                <p className="text-txtgray font-medium ml-2">{alert.value}</p>
+              <div key={index}>
+                {Object.values(alert).map((vital, idx) => (
+                  <div key={idx} className="flex justify-between mt-4">
+                    <div className="flex">
+                      {vital?.status == "high" ? (
+                        <span className="material-symbols-outlined text-yellow">
+                          keyboard_arrow_up
+                        </span>
+                      ) : (
+                        <span className="material-symbols-outlined text-yellow">
+                          keyboard_arrow_down
+                        </span>
+                      )}
+                      <p className="font-medium ml-2">{vital.name}</p>
+                    </div>
+                    <p className="text-txtgray font-medium ml-2">
+                      {vital.text} | {vital.value}
+                    </p>
+                  </div>
+                ))}
               </div>
             ))}
           </div>

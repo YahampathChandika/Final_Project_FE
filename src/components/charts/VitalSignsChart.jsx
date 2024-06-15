@@ -8,13 +8,13 @@ export default function VitalSignsChart() {
   const { data: vitalData, isLoading, error } = useGetPatientVitalsIdQuery(id);
 
   const vitalSigns = [
-    { name: "heartRate", color: "#5A81FA" },
-    { name: "respiratoryRate", color: "#5A81FA" },
-    { name: "supplementedO2", color: "#5A81FA" },
-    { name: "O2saturation", color: "#5A81FA" },
-    { name: "temperature", color: "#5A81FA" },
-    { name: "systolicBP", color: "#5A81FA" },
-    { name: "diastolicBP", color: "#5A81FA" },
+    { name: "heartRate", color: "#5A81FA", title: "Heart Rate" },
+    { name: "respiratoryRate", color: "#5A81FA", title: "Respiratory Rate" },
+    { name: "supplementedO2", color: "#5A81FA", title: "Supplemented O2" },
+    { name: "O2saturation", color: "#5A81FA", title: "O2 Saturation" },
+    { name: "temperature", color: "#5A81FA", title: "Temperature" },
+    { name: "systolicBP", color: "#5A81FA", title: "Systolic BP" },
+    { name: "diastolicBP", color: "#5A81FA", title: "Diastolic BP" },
   ];
 
   const [chartData, setChartData] = useState([]);
@@ -22,13 +22,24 @@ export default function VitalSignsChart() {
   useEffect(() => {
     if (vitalData?.payload) {
       const newChartData = vitalSigns.map((sign) => {
+        const filteredData = vitalData.payload
+          .map((data) => ({
+            date: data.date,
+            time: data.time,
+            value: data[sign.name],
+          }))
+          .filter((entry) => entry.value !== null);
+
         return {
           name: sign.name,
           color: sign.color,
           series: [
             {
               name: sign.name,
-              data: vitalData.payload.map((data) => data[sign.name]),
+              data: filteredData.map((entry) => ({
+                x: `${entry.date} ${entry.time}`,
+                y: entry.value,
+              })),
             },
           ],
           options: {
@@ -36,18 +47,41 @@ export default function VitalSignsChart() {
               height: 200,
               type: "line",
               zoom: {
-                enabled: false,
+                enabled: true,
+              },
+              toolbar: {
+                show: true,
+                export: {
+                  csv: {
+                    filename: `${sign.title.replace(/\s/g, '_')}_data`,
+                    columnDelimiter: ",",
+                    headerCategory: "Date",
+                    headerValue: sign.title,
+                    dateFormatter(timestamp) {
+                      return new Date(timestamp).toLocaleString();
+                    },
+                    data: {
+                      columns: ["Date", "Time", "Value"],
+                      csv: () => {
+                        return filteredData.map((entry) => [
+                          entry.date,
+                          entry.time,
+                          entry.value,
+                        ]);
+                      },
+                    },
+                  },
+                },
               },
             },
             dataLabels: {
               enabled: false,
             },
             stroke: {
-              // curve: "smooth",
-              curve: 'straight',
+              curve: "straight",
             },
             title: {
-              text: `${sign.name.charAt(0).toUpperCase() + sign.name.slice(1)}`,
+              text: sign.title,
               align: "left",
               style: {
                 fontSize: "17px",
@@ -63,7 +97,8 @@ export default function VitalSignsChart() {
               },
             },
             xaxis: {
-              categories: vitalData.payload.map((data) => data.date),
+              type: 'datetime',
+              categories: filteredData.map((entry) => `${entry.date} ${entry.time}`),
             },
             markers: {
               size: 3,

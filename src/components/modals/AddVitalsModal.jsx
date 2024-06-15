@@ -1,50 +1,40 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { Divider, Modal } from "rsuite";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { FormHelperText } from "@mui/material";
 import Swal from "sweetalert2";
-import { useAddVitalSignsMutation, useGetPatientByIdQuery, useGetPatientVitalsIdQuery } from "../../store/api/patientApi";
+import {
+  useAddVitalSignsMutation,
+  useGetPatientByIdQuery,
+  useGetPatientVitalsIdQuery,
+} from "../../store/api/patientApi";
 import { useParams } from "react-router-dom";
 
-const schema = yup.object().shape({
-  heartRate: yup.string().required("Heart Rate is required"),
-  respiratoryRate: yup.string().required("Respiratory Rate is required"),
-  supplemented_O2: yup.string().required("Supplemental O2 is required"),
-  O2saturation: yup.string().required("Oxygen Saturation is required"),
-  temperature: yup.string().required("Temperature is required"),
-  systolicBP: yup.string().required("Systolic BP is required"),
-  diastolicBP: yup.string().required("Diastolic BP is required"),
-  avpuScore: yup.string().required("AVPU Score is required"),
-});
-
 export default function AddVitalsModal({ open, handleClose }) {
-
   const { id } = useParams();
   const [addVitals] = useAddVitalSignsMutation();
-  const { refetch:vitalsRefetch } = useGetPatientVitalsIdQuery(id);
-  const { refetch:alertsRefetch } = useGetPatientByIdQuery(id);
+  const { refetch: vitalsRefetch } = useGetPatientVitalsIdQuery(id);
+  const { refetch: alertsRefetch } = useGetPatientByIdQuery(id);
 
+  const { handleSubmit, control, reset, watch } = useForm();
 
-
-  const {
-    handleSubmit,
-    control,
-    reset,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  const watchedFields = watch();
 
   const onSubmit = async (data) => {
     try {
-      const dataWithId = { ...data, PatientId: id };
+      // Replace empty strings with null
+      const dataWithNulls = Object.fromEntries(
+        Object.entries(data).map(([key, value]) => [
+          key,
+          value === "" ? null : value,
+        ])
+      );
+      const dataWithId = { ...dataWithNulls, PatientId: id };
+
       const response = await addVitals(dataWithId);
 
       if (response.data && !response.data.error) {
@@ -88,8 +78,19 @@ export default function AddVitalsModal({ open, handleClose }) {
     }
   };
 
+  const isFormFilled = Object.values(watchedFields).some(
+    (value) => value !== "" && value !== null
+  );
+
   return (
-    <Modal open={open} onClose={handleClose} className="!w-2/5 !mt-36">
+    <Modal
+      open={open}
+      onClose={() => {
+        reset();
+        handleClose();
+      }}
+      className="!w-2/5 !mt-36"
+    >
       <Modal.Body className="!h-auto">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex justify-between items-center !h-16 mt-4 rounded-t-md px-10">
@@ -111,10 +112,6 @@ export default function AddVitalsModal({ open, handleClose }) {
                     label="Heart Rate"
                     variant="outlined"
                     className="!my-5 w-full"
-                    error={!!errors.heartRate}
-                    helperText={
-                      errors.heartRate ? errors.heartRate.message : ""
-                    }
                   />
                 )}
               />
@@ -130,12 +127,6 @@ export default function AddVitalsModal({ open, handleClose }) {
                     label="Respiratory Rate"
                     variant="outlined"
                     className="!mb-5 w-full"
-                    error={!!errors.respiratoryRate}
-                    helperText={
-                      errors.respiratoryRate
-                        ? errors.respiratoryRate.message
-                        : ""
-                    }
                   />
                 )}
               />
@@ -151,10 +142,6 @@ export default function AddVitalsModal({ open, handleClose }) {
                     label="Supplemental O2"
                     variant="outlined"
                     className="!mb-5 w-full"
-                    error={!!errors.supplemented_O2}
-                    helperText={
-                      errors.supplemented_O2 ? errors.supplemented_O2.message : ""
-                    }
                   />
                 )}
               />
@@ -170,12 +157,6 @@ export default function AddVitalsModal({ open, handleClose }) {
                     label="Oxygen Saturation"
                     variant="outlined"
                     className="!mb-5 w-full"
-                    error={!!errors.O2saturation}
-                    helperText={
-                      errors.O2saturation
-                        ? errors.O2saturation.message
-                        : ""
-                    }
                   />
                 )}
               />
@@ -191,10 +172,6 @@ export default function AddVitalsModal({ open, handleClose }) {
                     label="Diastolic BP"
                     variant="outlined"
                     className="!mb-5 w-full"
-                    error={!!errors.diastolicBP}
-                    helperText={
-                      errors.diastolicBP ? errors.diastolicBP.message : ""
-                    }
                   />
                 )}
               />
@@ -210,10 +187,6 @@ export default function AddVitalsModal({ open, handleClose }) {
                     label="Systolic BP"
                     variant="outlined"
                     className="!mb-5 w-full"
-                    error={!!errors.systolicBP}
-                    helperText={
-                      errors.systolicBP ? errors.systolicBP.message : ""
-                    }
                   />
                 )}
               />
@@ -229,10 +202,6 @@ export default function AddVitalsModal({ open, handleClose }) {
                     label="Temperature"
                     variant="outlined"
                     className="!mb-5 w-full"
-                    error={!!errors.temperature}
-                    helperText={
-                      errors.temperature ? errors.temperature.message : ""
-                    }
                   />
                 )}
               />
@@ -243,10 +212,7 @@ export default function AddVitalsModal({ open, handleClose }) {
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
-                  <FormControl
-                    className="w-full !mb-5 !text-left"
-                    error={!!errors.avpuScore}
-                  >
+                  <FormControl className="w-full !mb-5 !text-left">
                     <InputLabel id="avpu-score-label">AVPU Score</InputLabel>
                     <Select
                       {...field}
@@ -259,11 +225,6 @@ export default function AddVitalsModal({ open, handleClose }) {
                       <MenuItem value="Pain">Pain</MenuItem>
                       <MenuItem value="Unresponsive">Unresponsive</MenuItem>
                     </Select>
-                    {errors.avpuScore && (
-                      <FormHelperText>
-                        {errors.avpuScore.message}
-                      </FormHelperText>
-                    )}
                   </FormControl>
                 )}
               />
@@ -282,7 +243,10 @@ export default function AddVitalsModal({ open, handleClose }) {
             </button>
             <button
               type="submit"
-              className="w-1/2 h-10 rounded-md bg-blue-700 text-white hover:bg-blue-800 transition-all duration-300"
+              disabled={!isFormFilled}
+              className={`w-1/2 h-10 rounded-md text-white transition-all duration-300 ${
+                isFormFilled ? "bg-blue-700 hover:bg-blue-800" : "bg-gray-400"
+              }`}
             >
               Record
             </button>
