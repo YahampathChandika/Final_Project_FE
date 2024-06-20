@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useGetPatientVitalsIdQuery } from "../../store/api/patientApi";
 import ReactApexChart from "react-apexcharts";
+import moment from "moment";
 
-export default function VitalSignsChart() {
+export default function VitalSignsChart({ startDate, endDate }) {
   const { id } = useParams();
   const { data: vitalData, isLoading, error } = useGetPatientVitalsIdQuery(id);
 
@@ -28,7 +29,11 @@ export default function VitalSignsChart() {
             time: data.time,
             value: data[sign.name],
           }))
-          .filter((entry) => entry.value !== null);
+          .filter((entry) => {
+            const entryDate = moment(`${entry.date} ${entry.time}`, "YYYY-MM-DD HH:mm");
+            const isInDateRange = startDate && endDate ? entryDate.isBetween(startDate, endDate, 'day', '[]') : true;
+            return entry.value !== null && isInDateRange;
+          });
 
         return {
           name: sign.name,
@@ -113,7 +118,7 @@ export default function VitalSignsChart() {
       });
       setChartData(newChartData);
     }
-  }, [vitalData]);
+  }, [vitalData, startDate, endDate]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;

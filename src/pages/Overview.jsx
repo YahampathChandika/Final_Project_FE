@@ -5,8 +5,11 @@ import OverviewPieChart from "../components/charts/OverviewPieChart";
 import OverviewTable from "../components/tables/OverviewTable";
 import { useGetSignedUserQuery } from "../store/api/userApi";
 import UserDetails from "../components/common/UserDetails";
+import { useGetAdmittedPatientsQuery } from "../store/api/patientApi";
 
 export default function Overview() {
+  const { data: patientData, isLoading, error } = useGetAdmittedPatientsQuery();
+
   const { data: signedUser } = useGetSignedUserQuery();
   const user = signedUser?.payload;
   return (
@@ -28,7 +31,7 @@ export default function Overview() {
           <Row className="bg-white h-28 rounded-md pt-3 pl-5 transform transition-transform duration-300 hover:scale-105 hover:shadow-md cursor-pointer">
             <p className="text-lg font-medium">Patients</p>
             <p className="text-xs text-txtgray">Current</p>
-            <p className="text-2xl text-txtblue mt-3">10</p>
+            <p className="text-2xl text-txtblue mt-3">0{patientData?.payload?.totalPatients}</p>
           </Row>
           <Row className="bg-white h-28 rounded-md pt-3 pl-5 mt-8 transform transition-transform duration-300 hover:scale-105 hover:shadow-md cursor-pointer">
             <p className="text-lg font-medium">Patients In</p>
@@ -40,7 +43,7 @@ export default function Overview() {
           <Row className="bg-white h-28 rounded-md pt-3 pl-5 transform transition-transform duration-300 hover:scale-105 hover:shadow-md cursor-pointer">
             <p className="text-lg font-medium">Alerts</p>
             <p className="text-xs text-txtgray">Current</p>
-            <p className="text-2xl text-txtblue mt-3">02</p>
+            <p className="text-2xl text-txtblue mt-3">0{(patientData?.payload?.stablePatients) +  (patientData?.payload?.criticalPatients)}</p>
           </Row>
           <Row className="bg-white h-28 rounded-md pt-3 pl-5 mt-8 transform transition-transform duration-300 hover:scale-105 hover:shadow-md cursor-pointer">
             <p className="text-lg font-medium">Patients Out</p>

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Table } from "rsuite";
 import { useGetPatientVitalsIdQuery } from "../../store/api/patientApi";
 import { useParams } from "react-router-dom";
+import moment from "moment";
 
 export default function VitalSignsTable({ startDate, endDate }) {
   const [sortColumn, setSortColumn] = useState();
@@ -11,44 +12,56 @@ export default function VitalSignsTable({ startDate, endDate }) {
   const { id } = useParams();
   const { data: vitalData, isLoading, error } = useGetPatientVitalsIdQuery(id);
 
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
+
   const getData = () => {
     if (error) {
       console.error("Error fetching data:", error);
       return [];
     }
 
-    if (isLoading) {
+    if (isLoading || !vitalData) {
       return [];
     }
 
-    if (vitalData && vitalData.payload) {
-      const sortedData = [...vitalData.payload];
+    // Filter data based on date range
+    const filteredData = vitalData.payload.filter((item) => {
+      const itemDate = moment(item.date, "YYYY-MM-DD");
+      const isAfterStartDate = startDate
+        ? itemDate.isSameOrAfter(moment(startDate))
+        : true;
+      const isBeforeEndDate = endDate
+        ? itemDate.isSameOrBefore(moment(endDate))
+        : true;
+      return isAfterStartDate && isBeforeEndDate;
+    });
 
-      if (sortColumn && sortType) {
-        sortedData.sort((a, b) => {
-          let x = a[sortColumn];
-          let y = b[sortColumn];
+    // Sort data if sortColumn and sortType are specified
+    if (sortColumn && sortType) {
+      filteredData.sort((a, b) => {
+        let x = a[sortColumn];
+        let y = b[sortColumn];
 
-          if (typeof x === "string") {
-            x = x.toLowerCase();
-          }
-          if (typeof y === "string") {
-            y = y.toLowerCase();
-          }
+        if (typeof x === "string") {
+          x = x.toLowerCase();
+        }
+        if (typeof y === "string") {
+          y = y.toLowerCase();
+        }
 
-          if (x < y) {
-            return sortType === "asc" ? -1 : 1;
-          }
-          if (x > y) {
-            return sortType === "asc" ? 1 : -1;
-          }
-          return 0;
-        });
-      }
-
-      return sortedData;
+        if (x < y) {
+          return sortType === "asc" ? -1 : 1;
+        }
+        if (x > y) {
+          return sortType === "asc" ? 1 : -1;
+        }
+        return 0;
+      });
     }
-    return [];
+
+    return filteredData;
   };
 
   const handleSortColumn = (sortColumn, sortType) => {
@@ -71,7 +84,7 @@ export default function VitalSignsTable({ startDate, endDate }) {
       sortColumn={sortColumn}
       sortType={sortType}
       onSortColumn={handleSortColumn}
-      loading={isLoading}
+      loading={loading}
       onRowClick={handleOnRowClick}
       headerHeight={70}
     >
