@@ -8,16 +8,16 @@ export default function PatientsTable() {
   const [loading, setLoading] = useState(false);
   const { Column, HeaderCell, Cell } = Table;
 
-  const {
-    data: patientData,
-    isLoading,
-    error,
-  } = useGetPatientListQuery();
+  const { data: patientData, isLoading, error } = useGetPatientListQuery();
+
+  const NameCell = ({ rowData, ...props }) => (
+    <Cell {...props}>{`${rowData.firstName} ${rowData.lastName}`}</Cell>
+  );
 
   const getData = () => {
     if (error) {
       console.error("Error fetching data:", error);
-      return [];      
+      return [];
     }
 
     if (isLoading) {
@@ -31,20 +31,27 @@ export default function PatientsTable() {
         return {
           ...patient,
           bedId: admission.bedId || "N/A",
-          diagnosis: admission.diagnosis || "N/A", 
+          diagnosis: admission.diagnosis || "N/A",
         };
       });
 
       if (sortColumn && sortType) {
         sortedData.sort((a, b) => {
-          let x = a[sortColumn];
-          let y = b[sortColumn];
+          let x, y;
 
-          if (typeof x === "string") {
-            x = x.toLowerCase();
-          }
-          if (typeof y === "string") {
-            y = y.toLowerCase();
+          if (sortColumn === "name") {
+            x = `${a.firstName} ${a.lastName}`.toLowerCase();
+            y = `${b.firstName} ${b.lastName}`.toLowerCase();
+          } else {
+            x = a[sortColumn];
+            y = b[sortColumn];
+
+            if (typeof x === "string") {
+              x = x.toLowerCase();
+            }
+            if (typeof y === "string") {
+              y = y.toLowerCase();
+            }
           }
 
           if (x < y) {
@@ -87,7 +94,7 @@ export default function PatientsTable() {
 
       <Column flexGrow={130} fixed sortable>
         <HeaderCell>Name</HeaderCell>
-        <Cell dataKey="firstName" />
+        <NameCell dataKey="name" />
       </Column>
 
       <Column flexGrow={100} sortable>

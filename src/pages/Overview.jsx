@@ -43,7 +43,7 @@ export default function Overview() {
           <Row className="bg-white h-28 rounded-md pt-3 pl-5 transform transition-transform duration-300 hover:scale-105 hover:shadow-md cursor-pointer">
             <p className="text-lg font-medium">Alerts</p>
             <p className="text-xs text-txtgray">Current</p>
-            <p className="text-2xl text-txtblue mt-3">0{(patientData?.payload?.stablePatients) +  (patientData?.payload?.criticalPatients)}</p>
+            <p className="text-2xl text-txtblue mt-3">0{(patientData?.payload?.unstablePatients) +  (patientData?.payload?.criticalPatients)}</p>
           </Row>
           <Row className="bg-white h-28 rounded-md pt-3 pl-5 mt-8 transform transition-transform duration-300 hover:scale-105 hover:shadow-md cursor-pointer">
             <p className="text-lg font-medium">Patients Out</p>

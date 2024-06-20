@@ -14,7 +14,7 @@ export default function UsersTable() {
   const [deleteUserId, setDeleteUserId] = useState(null);
 
   const [deleteUser] = useDeleteUserMutation();
-  const {refetch} = useGetAllUsersQuery();
+  const { refetch } = useGetAllUsersQuery();
 
   const handleDeleteOpen = (id) => {
     setDeleteUserId(id);
@@ -31,6 +31,10 @@ export default function UsersTable() {
 
   const { data: getAllUsers, isLoading, error } = useGetAllUsersQuery();
 
+  const NameCell = ({ rowData, ...props }) => (
+    <Cell {...props}>{`${rowData.firstName} ${rowData.lastName}`}</Cell>
+  );
+
   const getData = () => {
     if (error) {
       console.error("Error fetching data:", error);
@@ -46,14 +50,21 @@ export default function UsersTable() {
 
       if (sortColumn && sortType) {
         sortedData.sort((a, b) => {
-          let x = a[sortColumn];
-          let y = b[sortColumn];
+          let x, y;
 
-          if (typeof x === "string") {
-            x = x.toLowerCase();
-          }
-          if (typeof y === "string") {
-            y = y.toLowerCase();
+          if (sortColumn === "name") {
+            x = `${a.firstName} ${a.lastName}`.toLowerCase();
+            y = `${b.firstName} ${b.lastName}`.toLowerCase();
+          } else {
+            x = a[sortColumn];
+            y = b[sortColumn];
+
+            if (typeof x === "string") {
+              x = x.toLowerCase();
+            }
+            if (typeof y === "string") {
+              y = y.toLowerCase();
+            }
           }
 
           if (x < y) {
@@ -65,6 +76,7 @@ export default function UsersTable() {
           return 0;
         });
       }
+
       return sortedData;
     }
     return [];
@@ -126,7 +138,7 @@ export default function UsersTable() {
 
         <Column flexGrow={130} fixed sortable>
           <HeaderCell>Name</HeaderCell>
-          <Cell dataKey="firstName" />
+          <NameCell dataKey="name" />
         </Column>
 
         <Column flexGrow={100} sortable>
@@ -162,7 +174,7 @@ export default function UsersTable() {
         btntxt="Delete"
         id={deleteUserId}
         deleteApi={deleteUser}
-        refetchTable={refetch}  
+        refetchTable={refetch}
       />
     </>
   );
