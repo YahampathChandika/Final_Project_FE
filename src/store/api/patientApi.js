@@ -54,14 +54,14 @@ export const allpatientApi = api.injectEndpoints({
       query: (PatientId) => `vitals/${PatientId}`,
     }),
 
-    useUpdatePatientID: build.mutation({
+    dischargePatient: build.mutation({
       query: (id) => ({
         url: `patient/dischargePatient/${id}`,
         method: "PATCH",
       }),
     }),
 
-    usePatientreAdmitID: build.mutation({
+    reAdmitPatient: build.mutation({
       query: ({ id, data }) => ({
         url: `patient/reAdmit/${id}`,
         method: "POST",
@@ -78,9 +78,9 @@ export const {
   useDeletePatientMutation,
   useGetAllPatientMatricesQuery,
   useUpdatePatientMutation,
-  useGetPatientByIdQuery, 
+  useGetPatientByIdQuery,
   useAddVitalSignsMutation,
   useGetPatientVitalsIdQuery,
-  useUseUpdatePatientIDMutation,
-  useUsePatientreAdmitIDMutation,
+  useDischargePatientMutation,
+  useReAdmitPatientMutation,
 } = allpatientApi;

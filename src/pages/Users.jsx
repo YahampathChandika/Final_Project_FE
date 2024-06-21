@@ -1,37 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AutoComplete, Col, Container, InputGroup, Row } from "rsuite";
 import UsersTable from "../components/tables/UsersTable";
 import AddUserModal from "../components/modals/AddUserModal";
 import { useGetAllUsersQuery } from "../store/api/userApi";
 import UserDetails from "../components/common/UserDetails";
 
-
-
-const data = [
-  "Eugenia",
-  "Bryan",
-  "Linda",
-  "Nancy",
-  "Lloyd",
-  "Alice",
-  "Julia",
-  "Albert",
-  "Louisa",
-  "Lester",
-  "Lola",
-  "Lydia",
-  "Hal",
-  "Hannah",
-  "Harriet",
-  "Hattie",
-  "Hazel",
-  "Hilda",
-];
-
-
 export default function Users() {
   const [value, setValue] = useState("");
   const [userModalOpen, setUserModalOpen] = useState(false);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const handleUserModalOpen = () => setUserModalOpen(true);
   const handleUserModalClose = () => setUserModalOpen(false);
   const {
@@ -42,11 +19,52 @@ export default function Users() {
     refetch,
   } = useGetAllUsersQuery();
 
+  console.log("filteredUsers", value);
+
+  useEffect(() => {
+    if (getAllUsers?.payload) {
+      setFilteredUsers(getAllUsers.payload);
+    }
+  }, [getAllUsers]);
+
+  const totalUsers = getAllUsers?.payload?.length || 0;
+  const adminUsers =
+    getAllUsers?.payload?.filter((user) => user.role === "Admin").length || 0;
+  const doctorUsers =
+    getAllUsers?.payload?.filter((user) => user.role === "Doctor").length || 0;
+  const nurseUsers =
+    getAllUsers?.payload?.filter((user) => user.role === "Nurse").length || 0;
+
+  const handleSearchChange = (searchValue) => {
+    setValue(searchValue);
+
+    if (searchValue) {
+      const filtered = getAllUsers?.payload?.filter((user) =>
+        `${user.firstName} ${user.lastName}`
+          .toLowerCase()
+          .includes(searchValue.toLowerCase())
+      );
+      setFilteredUsers(filtered);
+    } else {
+      setFilteredUsers(getAllUsers?.payload || []);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setValue("");
+    setFilteredUsers(getAllUsers?.payload || []);
+  };
+
+  const handleSelectUser = (selectedUser) => {
+    const user = getAllUsers?.payload?.find(
+      (user) => `${user.firstName} ${user.lastName}` === selectedUser
+    );
+    setFilteredUsers(user ? [user] : []);
+  };
 
   const data = getAllUsers?.payload?.map((user) => {
-    return `${user.firstName} ${user.lastName}`; 
+    return `${user.firstName} ${user.lastName}`;
   });
-  
 
   return (
     <Container className="w-full">
@@ -55,12 +73,14 @@ export default function Users() {
           <span className="material-symbols-outlined text-black">group</span>
           <p className="text-2xl font-bold ml-4">Users</p>
         </Row>
-        <UserDetails/>
+        <UserDetails />
       </Row>
 
       <Row className="flex-col">
         <Row className="mr-8 w-full bg-white h-20 rounded-md pl-5 flex justify-between items-center">
-          <p className="text-lg font-medium text-txtgray">20 Users Total</p>
+          <p className="text-lg font-medium text-txtgray">
+            0{totalUsers} Users Total
+          </p>
 
           <Row className="flex mr-5 w-1/2">
             <InputGroup
@@ -71,9 +91,18 @@ export default function Users() {
                 placeholder="Search by User's Name"
                 data={data}
                 value={value}
-                onChange={setValue}
+                onChange={handleSearchChange}
+                onSelect={handleSelectUser}
               />
               <InputGroup.Addon>
+                {value && (
+                  <span
+                    className="material-symbols-outlined sidebar-icon text-lg font-medium text-red cursor-pointer mr-5"
+                    onClick={handleClearSearch}
+                  >
+                    close
+                  </span>
+                )}
                 <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue cursor-pointer">
                   search
                 </span>
@@ -97,7 +126,7 @@ export default function Users() {
             <Col>
               <p className="text-lg font-medium">Admins</p>
               <p className="text-xs text-txtgray">Current</p>
-              <p className="text-2xl text-txtblue mt-3">02</p>
+              <p className="text-2xl text-txtblue mt-3">0{adminUsers}</p>
             </Col>
             <Col>
               <span className="material-symbols-outlined text-4xl font-light text-txtblue">
@@ -109,7 +138,7 @@ export default function Users() {
             <Col>
               <p className="text-lg font-medium">Doctors</p>
               <p className="text-xs text-txtgray">Current</p>
-              <p className="text-2xl text-txtblue mt-3">08</p>
+              <p className="text-2xl text-txtblue mt-3">0{doctorUsers}</p>
             </Col>
             <Col>
               <span className="material-symbols-outlined text-4xl font-light text-txtblue">
@@ -121,7 +150,7 @@ export default function Users() {
             <Col>
               <p className="text-lg font-medium">Nurses</p>
               <p className="text-xs text-txtgray">Current</p>
-              <p className="text-2xl text-txtblue mt-3">15</p>
+              <p className="text-2xl text-txtblue mt-3">0{nurseUsers}</p>
             </Col>
             <Col>
               <span className="material-symbols-outlined text-4xl font-light text-txtblue">
@@ -135,7 +164,7 @@ export default function Users() {
       <Row className="bg-white h-96 rounded-md mt-6 flex flex-col">
         <p className="text-lg p-5 font-medium">Users' Details</p>
         <div className="flex-grow">
-          <UsersTable />
+          <UsersTable users={filteredUsers} />
         </div>
       </Row>
 

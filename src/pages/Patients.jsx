@@ -3,11 +3,19 @@ import { AutoComplete, Col, Container, InputGroup, Row } from "rsuite";
 import PatientsTable from "../components/tables/PatientsTable";
 import AddPatientModal from "../components/modals/AddPatientModal";
 import UserDetails from "../components/common/UserDetails";
+import { useGetPatientListQuery } from "../store/api/patientApi";
 
 export default function Patients() {
+  const { data: patientData, isLoading, error } = useGetPatientListQuery();
+
   const [patientModalOpen, setPatientModalOpen] = useState(false);
   const handlePatientModalOpen = () => setPatientModalOpen(true);
   const handlePatientModalClose = () => setPatientModalOpen(false);
+
+  // Calculate the total, admitted, and discharged patients
+  const totalPatients = patientData?.payload?.length || 0;
+  const admittedPatients = patientData?.payload?.filter(patient => patient.status === "Admitted").length || 0;
+  const dischargedPatients = totalPatients - admittedPatients;
 
   return (
     <Container className="w-full">
@@ -51,7 +59,7 @@ export default function Patients() {
             <Col>
               <p className="text-lg font-medium">Total</p>
               <p className="text-xs text-txtgray">All</p>
-              <p className="text-2xl text-txtblue mt-3">02</p>
+              <p className="text-2xl text-txtblue mt-3">0{totalPatients}</p>
             </Col>
             <Col>
               <span className="material-symbols-outlined text-4xl font-light text-txtblue">
@@ -63,7 +71,7 @@ export default function Patients() {
             <Col>
               <p className="text-lg font-medium">Admitted</p>
               <p className="text-xs text-txtgray">Current</p>
-              <p className="text-2xl text-txtblue mt-3">08</p>
+              <p className="text-2xl text-txtblue mt-3">0{admittedPatients}</p>
             </Col>
             <Col>
               <span className="material-symbols-outlined text-4xl font-light text-txtblue">
@@ -75,7 +83,7 @@ export default function Patients() {
             <Col>
               <p className="text-lg font-medium">Discharged</p>
               <p className="text-xs text-txtgray">Past</p>
-              <p className="text-2xl text-txtblue mt-3">15</p>
+              <p className="text-2xl text-txtblue mt-3">0{dischargedPatients}</p>
             </Col>
             <Col>
               <span className="material-symbols-outlined text-4xl font-light text-txtblue">

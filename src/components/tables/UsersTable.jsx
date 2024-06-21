@@ -6,7 +6,7 @@ import {
 } from "../../store/api/userApi";
 import FailModal from "../modals/Delete";
 
-export default function UsersTable() {
+export default function UsersTable({ users }) {
   const [sortColumn, setSortColumn] = useState();
   const [sortType, setSortType] = useState();
   const [loading, setLoading] = useState(false);
@@ -29,57 +29,40 @@ export default function UsersTable() {
 
   const { Column, HeaderCell, Cell } = Table;
 
-  const { data: getAllUsers, isLoading, error } = useGetAllUsersQuery();
-
-  const NameCell = ({ rowData, ...props }) => (
-    <Cell {...props}>{`${rowData.firstName} ${rowData.lastName}`}</Cell>
-  );
-
   const getData = () => {
-    if (error) {
-      console.error("Error fetching data:", error);
-      return [];
+    if (!users) return [];
+    const sortedData = [...users];
+
+    if (sortColumn && sortType) {
+      sortedData.sort((a, b) => {
+        let x, y;
+
+        if (sortColumn === "name") {
+          x = `${a.firstName} ${a.lastName}`.toLowerCase();
+          y = `${b.firstName} ${b.lastName}`.toLowerCase();
+        } else {
+          x = a[sortColumn];
+          y = b[sortColumn];
+
+          if (typeof x === "string") {
+            x = x.toLowerCase();
+          }
+          if (typeof y === "string") {
+            y = y.toLowerCase();
+          }
+        }
+
+        if (x < y) {
+          return sortType === "asc" ? -1 : 1;
+        }
+        if (x > y) {
+          return sortType === "asc" ? 1 : -1;
+        }
+        return 0;
+      });
     }
 
-    if (isLoading) {
-      return [];
-    }
-
-    if (getAllUsers && getAllUsers.payload) {
-      const sortedData = [...getAllUsers.payload];
-
-      if (sortColumn && sortType) {
-        sortedData.sort((a, b) => {
-          let x, y;
-
-          if (sortColumn === "name") {
-            x = `${a.firstName} ${a.lastName}`.toLowerCase();
-            y = `${b.firstName} ${b.lastName}`.toLowerCase();
-          } else {
-            x = a[sortColumn];
-            y = b[sortColumn];
-
-            if (typeof x === "string") {
-              x = x.toLowerCase();
-            }
-            if (typeof y === "string") {
-              y = y.toLowerCase();
-            }
-          }
-
-          if (x < y) {
-            return sortType === "asc" ? -1 : 1;
-          }
-          if (x > y) {
-            return sortType === "asc" ? 1 : -1;
-          }
-          return 0;
-        });
-      }
-
-      return sortedData;
-    }
-    return [];
+    return sortedData;
   };
 
   const handleSortColumn = (sortColumn, sortType) => {
@@ -99,6 +82,10 @@ export default function UsersTable() {
         style={{ width: 35, height: 35, borderRadius: "50%" }}
       />
     </Cell>
+  );
+
+  const NameCell = ({ rowData, ...props }) => (
+    <Cell {...props}>{`${rowData.firstName} ${rowData.lastName}`}</Cell>
   );
 
   const ActionCell = ({ rowData, ...props }) => (
@@ -157,8 +144,8 @@ export default function UsersTable() {
         </Column>
 
         <Column flexGrow={100} sortable>
-          <HeaderCell>Status</HeaderCell>
-          <Cell dataKey="activity" />
+          <HeaderCell>Speciality</HeaderCell>
+          <Cell dataKey="speciality" />
         </Column>
 
         <Column flexGrow={120} sortable>

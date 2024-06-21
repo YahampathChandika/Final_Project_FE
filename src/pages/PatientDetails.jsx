@@ -10,10 +10,14 @@ import VitalSignsChart from "../components/charts/VitalSignsChart";
 import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
+import Discharge from "../components/modals/Discharge";
+import ReAdmit from "../components/modals/ReAdmit";
 
 export default function PatientDetails() {
   const [activeTab, setActiveTab] = useState("table");
   const [userModalOpen, setUserModalOpen] = useState(false);
+  const [dischargeModalOpen, setDischargeModalOpen] = useState(false);
+  const [reAdmitModalOpen, setReAdmitModalOpen] = useState(false);
   const [dateRange, setDateRange] = useState([
     {
       startDate: null,
@@ -26,6 +30,10 @@ export default function PatientDetails() {
 
   const handleUserModalOpen = () => setUserModalOpen(true);
   const handleUserModalClose = () => setUserModalOpen(false);
+  const handleDischargeModalOpen = () => setDischargeModalOpen(true);
+  const handleDischargeModalClose = () => setDischargeModalOpen(false);
+  const handleReAdmitModalOpen = () => setReAdmitModalOpen(true);
+  const handleReAdmitModalClose = () => setReAdmitModalOpen(false);
   const { id } = useParams();
   const { data } = useGetPatientByIdQuery(id);
 
@@ -90,9 +98,9 @@ export default function PatientDetails() {
       <div className="pb-10 flex justify-between">
         <div className="flex items-center mb-5">
           <span className="material-symbols-outlined text-black font-semibold">
-            person
+            medical_information
           </span>
-          <p className="text-2xl font-bold ml-4">Users</p>
+          <p className="text-2xl font-semibold ml-4">Medical Details</p>
         </div>
         <UserDetails />
       </div>
@@ -174,70 +182,93 @@ export default function PatientDetails() {
                 </div>
               </div>
 
-              <div className="flex w-5/12 justify-between">
-                <div className="relative w-7/12">
-                  <input
-                    type="text"
-                    placeholder="Select Date Range"
-                    className="border rounded-md px-4 py-2 cursor-pointer w-full focus:outline-none text-txtblue"
-                    readOnly
+              {/* <div className="flex w-5/12 justify-between"> */}
+              <div className="relative">
+                {/* <div className="relative w-7/12"> */}
+                <input
+                  type="text"
+                  placeholder="Select Date Range"
+                  className="border rounded-md px-4 py-2 cursor-pointer w-full focus:outline-none text-txtblue"
+                  readOnly
+                  onClick={() => setCalendarVisible(!calendarVisible)}
+                  value={
+                    dateRange[0].startDate && dateRange[0].endDate
+                      ? `${moment(dateRange[0].startDate).format(
+                          "MM/DD/YYYY"
+                        )} - ${moment(dateRange[0].endDate).format(
+                          "MM/DD/YYYY"
+                        )}`
+                      : ""
+                  }
+                />
+                {!dateRange[0].startDate && !dateRange[0].endDate && (
+                  <span
+                    className="material-symbols-outlined absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-txtblue"
                     onClick={() => setCalendarVisible(!calendarVisible)}
-                    value={
-                      dateRange[0].startDate && dateRange[0].endDate
-                        ? `${moment(dateRange[0].startDate).format(
-                            "MM/DD/YYYY"
-                          )} - ${moment(dateRange[0].endDate).format(
-                            "MM/DD/YYYY"
-                          )}`
-                        : ""
-                    }
-                  />
-                  {!dateRange[0].startDate && !dateRange[0].endDate && (
-                    <span
-                      className="material-symbols-outlined absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-txtblue"
-                      onClick={() => setCalendarVisible(!calendarVisible)}
-                    >
-                      date_range
-                    </span>
-                  )}
-                  {dateRange[0].startDate && dateRange[0].endDate && (
-                    <span
-                      className="material-symbols-outlined absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-red"
-                      onClick={handleClearDateRange}
-                    >
-                      close
-                    </span>
-                  )}
-                  {calendarVisible && (
-                    <div
-                      ref={calendarRef}
-                      className="absolute z-50 mt-2 bg-white shadow-lg rounded-md"
-                      style={{ zIndex: 1000 }}
-                    >
-                      <DateRange
-                        editableDateInputs={true}
-                        onChange={(item) => setDateRange([item.selection])}
-                        moveRangeOnFirstSelection={false}
-                        ranges={dateRange}
-                        startDate={dateRange[0].startDate}
-                        endDate={dateRange[0].endDate}
-                        maxDate={new Date()}
-                        showDateDisplay={false}
-                      />
-                    </div>
-                  )}
-                </div>
+                  >
+                    date_range
+                  </span>
+                )}
+                {dateRange[0].startDate && dateRange[0].endDate && (
+                  <span
+                    className="material-symbols-outlined absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-red"
+                    onClick={handleClearDateRange}
+                  >
+                    close
+                  </span>
+                )}
+                {calendarVisible && (
+                  <div
+                    ref={calendarRef}
+                    className="absolute z-50 mt-2 bg-white shadow-lg rounded-md"
+                    style={{ zIndex: 1000 }}
+                  >
+                    <DateRange
+                      editableDateInputs={true}
+                      onChange={(item) => setDateRange([item.selection])}
+                      moveRangeOnFirstSelection={false}
+                      ranges={dateRange}
+                      startDate={dateRange[0].startDate}
+                      endDate={dateRange[0].endDate}
+                      maxDate={new Date()}
+                      showDateDisplay={false}
+                    />
+                  </div>
+                )}
+              </div>
 
+              <div
+                className="flex items-center text-txtblue text-xl font-medium cursor-pointer"
+                onClick={handleUserModalOpen}
+              >
+                <span className="material-symbols-outlined mr-2 ml-10">
+                  heart_plus
+                </span>
+                Add Vitals
+              </div>
+              {patientData?.status == "Admitted" ? (
                 <div
-                  className="flex items-center text-txtblue text-xl font-medium cursor-pointer"
-                  onClick={handleUserModalOpen}
+                  className="flex items-center text-red text-xl font-medium cursor-pointer"
+                  onClick={handleDischargeModalOpen}
                 >
                   <span className="material-symbols-outlined mr-2 ml-10">
-                    heart_plus
+                    moving_beds
                   </span>
-                  Add New
+                  Discharge
                 </div>
-              </div>
+              ) : (
+                <div
+                  className="flex items-center text-txtgray text-xl font-medium cursor-pointer"
+                  onClick={handleReAdmitModalOpen}
+                >
+                  <span className="material-symbols-outlined mr-2 ml-10">
+                    inpatient
+                  </span>
+                  ReAdmit
+                </div>
+              )}
+
+              {/* </div> */}
             </div>
           </div>
           {activeTab === "table" ? (
@@ -353,6 +384,11 @@ export default function PatientDetails() {
         </div>
       </div>
       <AddVitalsModal open={userModalOpen} handleClose={handleUserModalClose} />
+      <Discharge
+        open={dischargeModalOpen}
+        handleClose={handleDischargeModalClose}
+      />
+      <ReAdmit open={reAdmitModalOpen} handleClose={handleReAdmitModalClose} />
     </div>
   );
 }
