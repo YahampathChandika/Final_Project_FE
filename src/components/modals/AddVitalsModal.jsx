@@ -9,6 +9,7 @@ import Select from "@mui/material/Select";
 import Swal from "sweetalert2";
 import {
   useAddVitalSignsMutation,
+  useGetAdmittedPatientsQuery,
   useGetPatientByIdQuery,
   useGetPatientVitalsIdQuery,
 } from "../../store/api/patientApi";
@@ -19,6 +20,7 @@ export default function AddVitalsModal({ open, handleClose }) {
   const [addVitals] = useAddVitalSignsMutation();
   const { refetch: vitalsRefetch } = useGetPatientVitalsIdQuery(id);
   const { refetch: alertsRefetch } = useGetPatientByIdQuery(id);
+  const { refetch: patientsRefetch } = useGetAdmittedPatientsQuery();
 
   const { handleSubmit, control, reset, watch } = useForm();
 
@@ -42,6 +44,7 @@ export default function AddVitalsModal({ open, handleClose }) {
         handleClose();
         vitalsRefetch();
         alertsRefetch();
+        patientsRefetch();
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",

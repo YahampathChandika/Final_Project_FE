@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { AutoComplete, Col, Container, Divider, InputGroup, Row } from "rsuite";
 import UserDetails from "../components/common/UserDetails";
 import AddPatientModal from "../components/modals/AddPatientModal";
@@ -9,6 +9,7 @@ import noDataImage from "../assets/images/doctors.svg";
 
 export default function Admitted() {
   const [patientModalOpen, setPatientModalOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const handlePatientModalOpen = () => setPatientModalOpen(true);
   const handlePatientModalClose = () => setPatientModalOpen(false);
   const { data: patients } = useGetAdmittedPatientsQuery();
@@ -23,6 +24,32 @@ export default function Admitted() {
     const days = today.diff(birthDate, "days");
 
     return `${years}Y ${months}M ${days}D`;
+  };
+
+  const filteredPatients = useMemo(() => {
+    if (!patients?.payload?.patientsList) return [];
+    return patients.payload.patientsList.filter((patient) => {
+      const idMatch = patient.hospitalId.toString().includes(searchValue);
+      const nameMatch = `${patient.firstName} ${patient.lastName}`
+        .toLowerCase()
+        .includes(searchValue.toLowerCase());
+      return idMatch || nameMatch;
+    });
+  }, [patients, searchValue]);
+
+  const handleSelect = (value) => {
+    const selectedPatient = filteredPatients.find(
+      (patient) =>
+        patient.hospitalId.toString() === value ||
+        `${patient.firstName} ${patient.lastName}` === value
+    );
+    if (selectedPatient) {
+      setSearchValue(selectedPatient.hospitalId.toString());
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchValue("");
   };
 
   return (
@@ -44,8 +71,25 @@ export default function Admitted() {
           inside
           className="flex border-2 border-txtdarkblue !w-2/5 min-w-48 h-10 px-3 mr-5 !rounded-full items-center justify-evenly"
         >
-          <AutoComplete placeholder="Search by Name or ID" />
+          <AutoComplete
+            placeholder="Search by Name or ID"
+            data={filteredPatients.map((patient) => ({
+              label: `${patient.firstName} ${patient.lastName}`,
+              value: patient.hospitalId.toString(),
+            }))}
+            value={searchValue}
+            onChange={setSearchValue}
+            onSelect={handleSelect}
+          />
           <InputGroup.Addon>
+            {searchValue && (
+              <span
+                className="material-symbols-outlined sidebar-icon text-lg font-medium text-red cursor-pointer mr-5"
+                onClick={handleClearSearch}
+              >
+                close
+              </span>
+            )}
             <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue cursor-pointer">
               search
             </span>
@@ -64,14 +108,14 @@ export default function Admitted() {
         </Row>
       </Row>
 
-      {patients?.payload?.patientsList.length === 0 ? (
+      {filteredPatients.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full p-36">
           <img src={noDataImage} alt="No Data" className="w-72 h-full" />
           <p className="mt-10 text-xl text-gray-600">No Admitted Patients.</p>
         </div>
       ) : (
         <Row className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 pt-5 mb-8">
-          {patients?.payload?.patientsList.map((patient) => (
+          {filteredPatients.map((patient) => (
             <Link to={`/home/patientDetails/${patient.id}`} key={patient.id}>
               <div className="bg-white shadow-md rounded-lg p-5 hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer">
                 <div className="flex justify-between mb-2">
@@ -114,8 +158,7 @@ export default function Admitted() {
                     <span className="material-symbols-outlined mr-2">
                       circle_notifications
                     </span>
-                    Alerts | 0
-                    {patient.alertCount === "N/A" ? "0" : patient.alertCount}
+                    Alerts | {patient.alertCount === "N/A" ? "0" : patient.alertCount}
                   </div>
                 </div>
                 <div>
