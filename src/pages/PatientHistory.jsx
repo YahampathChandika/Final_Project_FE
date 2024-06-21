@@ -81,7 +81,12 @@ export default function PatientHistory() {
           </div>
         </div>
       </div>
-      <PatientHistoryTable />
+      <div className="bg-white h-96 rounded-md mt-6 flex flex-col">
+        <p className="text-lg p-10 pb-5 font-medium">Previous Admissions</p>
+        <div className="flex-grow pt-2">
+          <PatientHistoryTable />
+        </div>
+      </div>
     </div>
   );
 }
