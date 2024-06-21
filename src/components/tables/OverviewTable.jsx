@@ -3,6 +3,7 @@ import { Table } from "rsuite";
 import { useGetAdmittedPatientsQuery } from "../../store/api/patientApi";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import noDataImage from "../../assets/images/doctors.svg";
 
 export default function OverviewTable() {
   const [sortColumn, setSortColumn] = useState();
@@ -58,7 +59,7 @@ export default function OverviewTable() {
           } else {
             x = a[sortColumn];
             y = b[sortColumn];
-            
+
             if (typeof x === "string") {
               x = x.toLowerCase();
             }
@@ -105,6 +106,12 @@ export default function OverviewTable() {
       loading={loading}
       onRowClick={handleRowClick}
       rowClassName="cursor-pointer"
+      renderEmpty={() => (
+        <div className="flex flex-col items-center justify-center h-full bg-white">
+          <img src={noDataImage} alt="No Data" className="w-56 h-auto" />
+          <p className="mt-5 text-lg text-txtgray">No patients available.</p>
+        </div>
+      )}
     >
       <Column flexGrow={70} align="center" fixed sortable>
         <HeaderCell>ID</HeaderCell>

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { AutoComplete, Col, Container, Divider, InputGroup, Row } from "rsuite";
-import { mockUsers } from "../assets/mocks/mockUsers";
 import UserDetails from "../components/common/UserDetails";
 import AddPatientModal from "../components/modals/AddPatientModal";
 import { useGetAdmittedPatientsQuery } from "../store/api/patientApi";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import noDataImage from "../assets/images/doctors.svg";
 
 export default function Admitted() {
   const [patientModalOpen, setPatientModalOpen] = useState(false);
@@ -64,100 +64,106 @@ export default function Admitted() {
         </Row>
       </Row>
 
-      <Row className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 pt-5 mb-8">
-        {patients?.payload?.patientsList.map((patient) => (
-          <Link to={`/home/patientDetails/${patient.id}`}>
-            <div
-              key={patient.id}
-              className="bg-white shadow-md rounded-lg p-5 hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer"
-            >
-              <div className="flex justify-between mb-2">
-                <div className="flex items-center">
-                  <span
-                    className={`material-symbols-outlined mr-2 ${
-                      patient.condition === "Critical"
-                        ? "text-red"
+      {patients?.payload?.patientsList.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-full p-36">
+          <img src={noDataImage} alt="No Data" className="w-72 h-full" />
+          <p className="mt-10 text-xl text-gray-600">No Admitted Patients.</p>
+        </div>
+      ) : (
+        <Row className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 pt-5 mb-8">
+          {patients?.payload?.patientsList.map((patient) => (
+            <Link to={`/home/patientDetails/${patient.id}`} key={patient.id}>
+              <div className="bg-white shadow-md rounded-lg p-5 hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer">
+                <div className="flex justify-between mb-2">
+                  <div className="flex items-center">
+                    <span
+                      className={`material-symbols-outlined mr-2 ${
+                        patient.condition === "Critical"
+                          ? "text-red"
+                          : patient.condition === "Unstable"
+                          ? "text-yellow"
+                          : patient.condition === "Stable"
+                          ? "text-green"
+                          : ""
+                      }`}
+                    >
+                      {patient.condition === "Critical"
+                        ? "error"
                         : patient.condition === "Unstable"
-                        ? "text-yellow"
+                        ? "sync_problem"
                         : patient.condition === "Stable"
-                        ? "text-green"
-                        : ""
-                    }`}
-                  >
-                    {patient.condition === "Critical"
-                      ? "error"
-                      : patient.condition === "Unstable"
-                      ? "sync_problem"
-                      : patient.condition === "Stable"
-                      ? "check_circle"
-                      : ""}
-                  </span>
-                  <span
-                    className={`text-lg font-medium ${
-                      patient.condition === "Critical"
-                        ? "text-red"
-                        : patient.condition === "Unstable"
-                        ? "text-yellow"
-                        : patient.condition === "Stable"
-                        ? "text-green"
-                        : ""
-                    }`}
-                  >
-                    {patient.condition}
-                  </span>
-                </div>
+                        ? "check_circle"
+                        : ""}
+                    </span>
+                    <span
+                      className={`text-lg font-medium ${
+                        patient.condition === "Critical"
+                          ? "text-red"
+                          : patient.condition === "Unstable"
+                          ? "text-yellow"
+                          : patient.condition === "Stable"
+                          ? "text-green"
+                          : ""
+                      }`}
+                    >
+                      {patient.condition}
+                    </span>
+                  </div>
 
-                <div className="flex items-center text-txtblue text-lg font-medium">
-                  <span className="material-symbols-outlined mr-2">
-                    circle_notifications
-                  </span>
-                  Alerts | 0{patient.alertCount === "N/A" ? "0" : patient.alertCount}
+                  <div className="flex items-center text-txtblue text-lg font-medium">
+                    <span className="material-symbols-outlined mr-2">
+                      circle_notifications
+                    </span>
+                    Alerts | 0
+                    {patient.alertCount === "N/A" ? "0" : patient.alertCount}
+                  </div>
                 </div>
-              </div>
-              <div>
-                <p className="font-semibold text-lg ">
-                  {patient.firstName} {patient.lastName}
-                </p>
-                <p className="font-medium text-txtgray ">
-                  {patient.hospitalId}
-                </p>
-              </div>
-              <div className="flex mt-5 justify-between">
-                <div className="flex-col">
-                  <p className="text-txtgray">Bed No</p>
-                  <p className="text-lg font-medium">0{patient.bedNo}</p>
-                </div>
-                <div className="flex-col text-right">
-                  <p className="text-txtgray">Diagnosis</p>
-                  <p className="text-lg font-medium">{patient.diagnosis}</p>
-                </div>
-              </div>
-              <div className="flex mt-5 justify-between">
-                <div className="flex-col">
-                  <p className="text-txtgray">Age</p>
-                  <p className="text-lg font-medium">
-                    {calculateAge(patient.dateOfBirth)}
+                <div>
+                  <p className="font-semibold text-lg ">
+                    {patient.firstName} {patient.lastName}
+                  </p>
+                  <p className="font-medium text-txtgray ">
+                    {patient.hospitalId}
                   </p>
                 </div>
-                <div className="flex-col text-right">
-                  <p className="text-txtgray">Admitted Date</p>
-                  <p className="text-lg font-medium">{patient.createdAt}</p>
+                <div className="flex mt-5 justify-between">
+                  <div className="flex-col">
+                    <p className="text-txtgray">Bed No</p>
+                    <p className="text-lg font-medium">0{patient.bedNo}</p>
+                  </div>
+                  <div className="flex-col text-right">
+                    <p className="text-txtgray">Diagnosis</p>
+                    <p className="text-lg font-medium">{patient.diagnosis}</p>
+                  </div>
+                </div>
+                <div className="flex mt-5 justify-between">
+                  <div className="flex-col">
+                    <p className="text-txtgray">Age</p>
+                    <p className="text-lg font-medium">
+                      {calculateAge(patient.dateOfBirth)}
+                    </p>
+                  </div>
+                  <div className="flex-col text-right">
+                    <p className="text-txtgray">Admitted Date</p>
+                    <p className="text-lg font-medium">{patient.createdAt}</p>
+                  </div>
+                </div>
+                <Divider className="text-txtgray" />
+                <div className="flex items-center text-txtblue text-lg font-medium">
+                  Notes
+                  <span className="material-symbols-outlined ml-2">
+                    description
+                  </span>
+                </div>
+                <div className="text-txtgray mt-2">
+                  Has abnormal condition in heart. Check BP regularly.
                 </div>
               </div>
-              <Divider className="text-txtgray" />
-              <div className="flex items-center text-txtblue text-lg font-medium">
-                Notes
-                <span className="material-symbols-outlined ml-2">
-                  description
-                </span>
-              </div>
-              <div className="text-txtgray mt-2">
-                Has abnormal condition in heart. Check BP regularly.
-              </div>
-            </div>
-          </Link>
-        ))}
-      </Row>
+            </Link>
+          ))}
+        </Row>
+      )}
+
       <AddPatientModal
         open={patientModalOpen}
         handleClose={handlePatientModalClose}

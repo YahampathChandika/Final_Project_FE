@@ -5,6 +5,7 @@ import {
   useGetAllUsersQuery,
 } from "../../store/api/userApi";
 import FailModal from "../modals/Delete";
+import noDataImage from "../../assets/images/nofound.svg";
 
 export default function UsersTable({ users }) {
   const [sortColumn, setSortColumn] = useState();
@@ -112,6 +113,12 @@ export default function UsersTable({ users }) {
         onSortColumn={handleSortColumn}
         loading={loading}
         rowHeight={55}
+        renderEmpty={() => (
+          <div className="flex flex-col items-center justify-center h-full bg-white">
+            <img src={noDataImage} alt="No Data" className="w-56 h-auto" />
+            <p className="mt-5 text-lg text-gray-600">No users found!</p>
+          </div>
+        )}
       >
         <Column width={60} align="center" fixed>
           <HeaderCell></HeaderCell>
