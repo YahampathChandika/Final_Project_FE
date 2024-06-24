@@ -158,7 +158,7 @@ export default function Admitted() {
                     <span className="material-symbols-outlined mr-2">
                       circle_notifications
                     </span>
-                    Alerts | {patient.alertCount === "N/A" ? "0" : patient.alertCount}
+                    Alerts | 0{patient.alertCount === "N/A" ? "0" : patient.alertCount}
                   </div>
                 </div>
                 <div>
