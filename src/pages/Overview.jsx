@@ -8,10 +8,16 @@ import UserDetails from "../components/common/UserDetails";
 import { useGetAdmittedPatientsQuery } from "../store/api/patientApi";
 
 export default function Overview() {
+  const [selectedRisk, setSelectedRisk] = useState(null);
+  console.log(selectedRisk)
   const { data: patientData, isLoading, error } = useGetAdmittedPatientsQuery();
-
   const { data: signedUser } = useGetSignedUserQuery();
   const user = signedUser?.payload;
+
+   const handlePieChartClick = (risk) => {
+    setSelectedRisk((prevRisk) => (prevRisk === risk ? null : risk));
+  };
+
   return (
     <Container className="w-full">
       <Row className="pb-10 flex justify-between">
@@ -58,14 +64,14 @@ export default function Overview() {
         </Col>
         <Col className="bg-white w-1/3 rounded-md">
           <p className="mt-3 ml-5 pb-1 text-lg font-medium">Patient Status</p>
-          <OverviewPieChart />
+          <OverviewPieChart onClickSlice={handlePieChartClick} />
         </Col>
       </Row>
 
       <Row className="bg-white h-96 rounded-md mt-8 flex flex-col">
         <p className="text-lg p-5 font-medium">Patients’ Details</p>
         <div className="flex-grow">
-          <OverviewTable />
+          <OverviewTable selectedRisk={selectedRisk}/>
         </div>
       </Row>
     </Container>

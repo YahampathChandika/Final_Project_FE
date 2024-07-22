@@ -238,7 +238,7 @@ export default function PatientDetails() {
               </div>
 
               <div
-                className="flex items-center text-txtblue text-sm 2xl:text-base 2xl:text-xl font-medium cursor-pointer"
+                className="flex items-center text-txtblue text-sm 2xl:text-xl font-medium cursor-pointer"
                 onClick={handleUserModalOpen}
               >
                 <span className="material-symbols-outlined mr-1">
@@ -248,7 +248,7 @@ export default function PatientDetails() {
               </div>
               {patientData?.status == "Admitted" ? (
                 <div
-                  className="flex items-center text-red text-sm 2xl:text-base 2xl:text-xl font-medium cursor-pointer"
+                  className="flex items-center text-red text-sm 2xl:text-xl font-medium cursor-pointer"
                   onClick={handleDischargeModalOpen}
                 >
                   <span className="material-symbols-outlined mr-1">
@@ -258,7 +258,7 @@ export default function PatientDetails() {
                 </div>
               ) : (
                 <div
-                  className="flex items-center text-txtgray text-sm 2xl:text-base 2xl:text-xl font-medium cursor-pointer"
+                  className="flex items-center text-txtgray text-sm 2xl:text-xl font-medium cursor-pointer"
                   onClick={handleReAdmitModalOpen}
                 >
                   <span className="material-symbols-outlined mr-1">

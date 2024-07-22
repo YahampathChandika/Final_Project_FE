@@ -5,7 +5,7 @@ import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import noDataImage from "../../assets/images/doctors.svg";
 
-export default function OverviewTable() {
+export default function OverviewTable({ selectedRisk }) {
   const [sortColumn, setSortColumn] = useState();
   const [sortType, setSortType] = useState();
   const [loading, setLoading] = useState(false);
@@ -34,7 +34,6 @@ export default function OverviewTable() {
 
   const { data: patientData, isLoading, error } = useGetAdmittedPatientsQuery();
 
-
   const getData = () => {
     if (error) {
       console.log("Error fetching data:", error);
@@ -46,7 +45,19 @@ export default function OverviewTable() {
     }
 
     if (patientData && patientData?.payload?.patientsList) {
-      const sortedData = [...patientData.payload.patientsList];
+      const filteredData = selectedRisk
+        ? patientData.payload.patientsList.filter((patient) => {
+            if (selectedRisk === "Low Risk")
+              return patient.condition === "Low Risk";
+            if (selectedRisk === "Medium Risk")
+              return patient.condition === "Medium Risk";
+            if (selectedRisk === "High Risk")
+              return patient.condition === "High Risk";
+            return true;
+          })
+        : patientData.payload.patientsList;
+
+      const sortedData = [...filteredData];
 
       if (sortColumn && sortType) {
         sortedData.sort((a, b) => {
