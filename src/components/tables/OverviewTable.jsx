@@ -34,7 +34,6 @@ export default function OverviewTable() {
 
   const { data: patientData, isLoading, error } = useGetAdmittedPatientsQuery();
 
-  console.log("patientData", patientData);
 
   const getData = () => {
     if (error) {

@@ -20,7 +20,6 @@ export default function UsersTable({ users }) {
   const handleDeleteOpen = (id) => {
     setDeleteUserId(id);
     setDeleteOpen(true);
-    console.log("handleDeleteOpen", id);
   };
 
   const handleDeleteClose = () => {

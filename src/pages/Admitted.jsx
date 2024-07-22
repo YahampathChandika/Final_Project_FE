@@ -66,7 +66,7 @@ export default function Admitted() {
         <UserDetails />
       </Row>
 
-      <Row className="mr-8 w-full bg-white h-20 rounded-md pl-5 flex justify-between items-center">
+      <Row className="mr-8 w-full bg-white h-20 rounded-md px-5 flex justify-between items-center">
         <InputGroup
           inside
           className="flex border-2 border-txtdarkblue !w-2/5 min-w-48 h-10 px-3 mr-5 !rounded-full items-center justify-evenly"
@@ -96,15 +96,13 @@ export default function Admitted() {
           </InputGroup.Addon>
         </InputGroup>
         <Row
-          className="min-w-52 flex items-center cursor-pointer"
+          className="group min-w-52 flex items-center cursor-pointer justify-center bg-white text-txtblue  hover:text-txtdarkblue hover:border-txtdarkblue hover:scale-105 transition duration-300 py-2 border border-txtblue rounded-md shadow"
           onClick={handlePatientModalOpen}
         >
-          <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 ">
+          <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtblue mr-3 group-hover:text-txtdarkblue group-hover:scale-105 transition duration-300">
             add_circle
           </span>
-          <p className="text-lg font-medium text-txtdarkblue">
-            Add New Patient
-          </p>
+          <p className="text-lg font-medium">Add New Patient</p>
         </Row>
       </Row>
 
@@ -122,30 +120,30 @@ export default function Admitted() {
                   <div className="flex items-center">
                     <span
                       className={`material-symbols-outlined mr-2 ${
-                        patient.condition === "Critical"
+                        patient.condition === "High Risk"
                           ? "text-red"
-                          : patient.condition === "Unstable"
+                          : patient.condition === "Medium Risk"
                           ? "text-yellow"
-                          : patient.condition === "Stable"
+                          : patient.condition === "Low Risk"
                           ? "text-green"
                           : ""
                       }`}
                     >
-                      {patient.condition === "Critical"
+                      {patient.condition === "High Risk"
                         ? "error"
-                        : patient.condition === "Unstable"
+                        : patient.condition === "Medium Risk"
                         ? "sync_problem"
-                        : patient.condition === "Stable"
+                        : patient.condition === "Low Risk"
                         ? "check_circle"
                         : ""}
                     </span>
                     <span
                       className={`text-lg font-medium ${
-                        patient.condition === "Critical"
+                        patient.condition === "High Risk"
                           ? "text-red"
-                          : patient.condition === "Unstable"
+                          : patient.condition === "Medium Risk"
                           ? "text-yellow"
-                          : patient.condition === "Stable"
+                          : patient.condition === "Low Risk"
                           ? "text-green"
                           : ""
                       }`}
@@ -158,7 +156,8 @@ export default function Admitted() {
                     <span className="material-symbols-outlined mr-2">
                       circle_notifications
                     </span>
-                    Alerts | 0{patient.alertCount === "N/A" ? "0" : patient.alertCount}
+                    Alerts | 0
+                    {patient.alertCount === "N/A" ? "0" : patient.alertCount}
                   </div>
                 </div>
                 <div>

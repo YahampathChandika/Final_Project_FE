@@ -159,12 +159,12 @@ export default function PatientDetails() {
             </div>
           </div>
           <div className="flex-col w-full bg-white rounded-md justify-between items-center">
-            <div className="flex items-center justify-between py-6 px-8 mb-6">
+            <div className="flex items-center justify-between py-6 px-3 2xl:px-8 mb-6">
               <div className="flex justify-center bg-bggray border py-1 pr-2 rounded-full w-4/12 items-center">
                 <div className="relative bg-bggray rounded-full p-1 w-full">
                   <div style={tabIndicatorStyles}></div>
                   <button
-                    className={`relative z-10 px-4 py-2 rounded-full font-medium focus:outline-none w-1/2 transition duration-300 ${
+                    className={`relative z-10 px-4 py-2 rounded-full text-sm 2xl:text-base font-medium focus:outline-none w-1/2 transition duration-300 ${
                       activeTab === "table" ? "text-white" : "text-txtgray"
                     }`}
                     onClick={() => setActiveTab("table")}
@@ -172,7 +172,7 @@ export default function PatientDetails() {
                     Table View
                   </button>
                   <button
-                    className={`relative z-10 px-4 py-2 rounded-full font-medium focus:outline-none w-1/2 transition duration-300 ${
+                    className={`relative z-10 px-4 py-2 rounded-full text-sm 2xl:text-base font-medium focus:outline-none w-1/2 transition duration-300 ${
                       activeTab === "chart" ? "text-white" : "text-txtgray"
                     }`}
                     onClick={() => setActiveTab("chart")}
@@ -238,30 +238,30 @@ export default function PatientDetails() {
               </div>
 
               <div
-                className="flex items-center text-txtblue text-xl font-medium cursor-pointer"
+                className="flex items-center text-txtblue text-sm 2xl:text-base 2xl:text-xl font-medium cursor-pointer"
                 onClick={handleUserModalOpen}
               >
-                <span className="material-symbols-outlined mr-2 ml-10">
+                <span className="material-symbols-outlined mr-1">
                   heart_plus
                 </span>
                 Add Vitals
               </div>
               {patientData?.status == "Admitted" ? (
                 <div
-                  className="flex items-center text-red text-xl font-medium cursor-pointer"
+                  className="flex items-center text-red text-sm 2xl:text-base 2xl:text-xl font-medium cursor-pointer"
                   onClick={handleDischargeModalOpen}
                 >
-                  <span className="material-symbols-outlined mr-2 ml-10">
+                  <span className="material-symbols-outlined mr-1">
                     moving_beds
                   </span>
                   Discharge
                 </div>
               ) : (
                 <div
-                  className="flex items-center text-txtgray text-xl font-medium cursor-pointer"
+                  className="flex items-center text-txtgray text-sm 2xl:text-base 2xl:text-xl font-medium cursor-pointer"
                   onClick={handleReAdmitModalOpen}
                 >
-                  <span className="material-symbols-outlined mr-2 ml-10">
+                  <span className="material-symbols-outlined mr-1">
                     inpatient
                   </span>
                   ReAdmit
@@ -284,10 +284,10 @@ export default function PatientDetails() {
           )}
         </div>
         <div className="flex-col w-1/4">
-          <div className="flex-col w-full bg-white rounded-md justify-between items-center p-6">
+          <div className="flex-col w-full bg-white rounded-md justify-between items-center p-4 2xl:p-6">
             <div className="flex w-full justify-between">
-              <p className="font-semibold text-lg">Alerts</p>
-              <div className="flex items-center text-txtblue text-lg font-medium">
+              <p className="font-semibold text-base 2xl:text-lg">Alerts</p>
+              <div className="flex items-center text-txtblue font-medium text-base 2xl:text-lg">
                 <span className="material-symbols-outlined mr-2">
                   notifications_active
                 </span>
@@ -300,48 +300,59 @@ export default function PatientDetails() {
             <Divider className="text-txtgray !mt-3 !mb-5" />
             {criticalAlerts?.map((alert, index) => (
               <div key={index}>
-                {Object.values(alert).map((vital, idx) => (
-                  <div key={idx} className="flex justify-between mt-4">
-                    <div className="flex">
-                      {vital?.status == "high" ? (
-                        <span className="material-symbols-outlined text-red">
-                          keyboard_double_arrow_up
-                        </span>
-                      ) : (
-                        <span className="material-symbols-outlined text-red">
-                          keyboard_double_arrow_down
-                        </span>
-                      )}
-                      <p className="font-medium ml-2">{vital.name}</p>
-                    </div>
-                    <p className="text-txtgray font-medium ml-2">
-                      {vital.text} | {vital.value}
-                    </p>
-                  </div>
-                ))}
+                {Object.values(alert).map(
+                  (vital, idx) =>
+                    vital.value != null && (
+                      <div key={idx} className="flex justify-between mt-4">
+                        <div className="flex">
+                          {vital?.status == "high" ? (
+                            <span className="material-symbols-outlined text-red">
+                              keyboard_double_arrow_up
+                            </span>
+                          ) : (
+                            <span className="material-symbols-outlined text-red">
+                              keyboard_double_arrow_down
+                            </span>
+                          )}
+                          <p className="font-medium text-sm 2xl:text-base ml-2">
+                            {vital.name}
+                          </p>
+                        </div>
+                        <p className="text-txtgray text-sm 2xl:text-base font-medium ml-2">
+                          {vital.text} | {vital.value}
+                        </p>
+                      </div>
+                    )
+                )}
               </div>
             ))}
+
             {borderlineAlerts?.map((alert, index) => (
               <div key={index}>
-                {Object.values(alert).map((vital, idx) => (
-                  <div key={idx} className="flex justify-between mt-4">
-                    <div className="flex">
-                      {vital?.status == "high" ? (
-                        <span className="material-symbols-outlined text-yellow">
-                          keyboard_arrow_up
-                        </span>
-                      ) : (
-                        <span className="material-symbols-outlined text-yellow">
-                          keyboard_arrow_down
-                        </span>
-                      )}
-                      <p className="font-medium ml-2">{vital.name}</p>
-                    </div>
-                    <p className="text-txtgray font-medium ml-2">
-                      {vital.text} | {vital.value}
-                    </p>
-                  </div>
-                ))}
+                {Object.values(alert).map(
+                  (vital, idx) =>
+                    vital.value != null && (
+                      <div key={idx} className="flex justify-between mt-4">
+                        <div className="flex">
+                          {vital?.status == "high" ? (
+                            <span className="material-symbols-outlined text-yellow">
+                              keyboard_arrow_up
+                            </span>
+                          ) : (
+                            <span className="material-symbols-outlined text-yellow">
+                              keyboard_arrow_down
+                            </span>
+                          )}
+                          <p className="font-medium text-sm 2xl:text-base ml-2">
+                            {vital.name}
+                          </p>
+                        </div>
+                        <p className="text-txtgray text-sm 2xl:text-base font-medium ml-2">
+                          {vital.text} | {vital.value}
+                        </p>
+                      </div>
+                    )
+                )}
               </div>
             ))}
           </div>

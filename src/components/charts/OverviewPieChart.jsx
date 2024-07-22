@@ -4,7 +4,6 @@ import { useGetAdmittedPatientsQuery } from "../../store/api/patientApi";
 
 export default function OverviewPieChart() {
   const { data: patientData, isLoading, error } = useGetAdmittedPatientsQuery();
-
   const [chartData, setChartData] = useState({
     series: [],
     options: {
@@ -15,7 +14,7 @@ export default function OverviewPieChart() {
         type: "donut",
         height: 200,
       },
-      labels: ["Stable", "Critical", "Unstable"],
+      labels: ["Low Risk", "Medium Risk", "High Risk"],
       dataLabels: {
         enabled: true,
       },
@@ -28,7 +27,7 @@ export default function OverviewPieChart() {
           },
         },
       },
-      colors: ["#8fb935", "#EF4444", "#e6e22e"], // Custom colors
+      colors: ["#8fb935", "#e6e22e", "#EF4444"], // Custom colors
     },
   });
 

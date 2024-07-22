@@ -66,21 +66,6 @@ function SidebarComp() {
           <div className="sidebar-link">
             <MenuItem
               className={
-                selectedMenuItem === "users" ? "selected-menu-item" : ""
-              }
-              icon={
-                <span className="material-symbols-outlined sidebar-icon">
-                  group
-                </span>
-              }
-              onClick={() => handleMenuItemClick("users")}
-            >
-              Users
-            </MenuItem>
-          </div>
-          <div className="sidebar-link">
-            <MenuItem
-              className={
                 selectedMenuItem === "admitted" ? "selected-menu-item" : ""
               }
               icon={
@@ -112,6 +97,21 @@ function SidebarComp() {
           <div className="sidebar-link">
             <MenuItem
               className={
+                selectedMenuItem === "users" ? "selected-menu-item" : ""
+              }
+              icon={
+                <span className="material-symbols-outlined sidebar-icon">
+                  group
+                </span>
+              }
+              onClick={() => handleMenuItemClick("users")}
+            >
+              Users
+            </MenuItem>
+          </div>
+          <div className="sidebar-link">
+            <MenuItem
+              className={
                 selectedMenuItem === "profile" ? "selected-menu-item" : ""
               }
               icon={
@@ -132,7 +132,7 @@ function SidebarComp() {
           <p>Logout</p>
         </div>
       </Sidebar>
-      <LogoutModal open={logoutModalOpen} handleClose={handleLogoutClose}/>
+      <LogoutModal open={logoutModalOpen} handleClose={handleLogoutClose} />
     </>
   );
 }

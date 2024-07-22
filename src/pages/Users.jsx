@@ -19,8 +19,6 @@ export default function Users() {
     refetch,
   } = useGetAllUsersQuery();
 
-  console.log("filteredUsers", value);
-
   useEffect(() => {
     if (getAllUsers?.payload) {
       setFilteredUsers(getAllUsers.payload);

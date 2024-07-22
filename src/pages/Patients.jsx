@@ -57,7 +57,7 @@ export default function Patients() {
         <UserDetails />
       </Row>
       <Row className="flex-col">
-        <Row className="mr-8 w-full bg-white h-20 rounded-md pl-5 flex justify-between items-center">
+        <Row className="mr-8 w-full bg-white h-20 rounded-md px-5 flex justify-between items-center">
           <InputGroup
             inside
             className="flex border-2 !w-2/5 min-w-48 h-10 px-3 mr-5 !rounded-full items-center justify-evenly"
@@ -87,13 +87,13 @@ export default function Patients() {
             </InputGroup.Addon>
           </InputGroup>
           <Row
-            className="min-w-52 flex items-center cursor-pointer"
+            className="group min-w-52 flex items-center justify-center cursor-pointer bg-transparent hover:bg-blue-500 text-blue-700 transition hover:scale-105 duration-300 hover:text-white py-2 border border-blue-500 hover:border-transparent rounded-md"
             onClick={handlePatientModalOpen}
           >
-            <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 ">
+            <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-blue-700 group-hover:text-white transition duration-300 mr-3 ">
               add_circle
             </span>
-            <p className="text-lg font-medium text-txtdarkblue">
+            <p className="text-lg font-medium">
               Add New Patient
             </p>
           </Row>

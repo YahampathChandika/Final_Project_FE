@@ -73,10 +73,6 @@ export default function VitalSignsTable({ startDate, endDate }) {
     }, 500);
   };
 
-  const handleOnRowClick = (rowIndex) => {
-    console.log(rowIndex);
-  };
-
   return (
     <Table
       height={420}
@@ -85,7 +81,6 @@ export default function VitalSignsTable({ startDate, endDate }) {
       sortType={sortType}
       onSortColumn={handleSortColumn}
       loading={loading}
-      onRowClick={handleOnRowClick}
       headerHeight={70}
     >
       <Column flexGrow={100} align="center" fixed sortable>
@@ -98,51 +93,41 @@ export default function VitalSignsTable({ startDate, endDate }) {
         <Cell align="center" dataKey="time" />
       </Column>
 
-      <Column flexGrow={100} fixed sortable>
-        <HeaderCell align="center">Heart Rate</HeaderCell>
+      <Column flexGrow={100} fixed>
+        <HeaderCell align="center">HR</HeaderCell>
         <Cell align="center" dataKey="heartRate" />
       </Column>
-      <Column flexGrow={100} fixed sortable>
-        <HeaderCell align="center">
-          Repository <br /> Rate
-        </HeaderCell>
+      <Column flexGrow={100} fixed>
+        <HeaderCell align="center">RR</HeaderCell>
         <Cell align="center" dataKey="respiratoryRate" />
       </Column>
 
-      <Column flexGrow={100} sortable>
-        <HeaderCell align="center">
-          Supplemental <br /> O2
-        </HeaderCell>
+      <Column flexGrow={100}>
+        <HeaderCell align="center">Sup. O2</HeaderCell>
         <Cell align="center" dataKey="supplementedO2" />
       </Column>
 
-      <Column flexGrow={100} sortable>
-        <HeaderCell align="center">
-          Saturation <br /> O2
-        </HeaderCell>
+      <Column flexGrow={100}>
+        <HeaderCell align="center">Sat. O2</HeaderCell>
         <Cell align="center" dataKey="O2saturation" />
       </Column>
 
-      <Column flexGrow={100} sortable>
-        <HeaderCell align="center">
-          Systolic <br /> BP
-        </HeaderCell>
+      <Column flexGrow={100}>
+        <HeaderCell align="center">Sys. BP</HeaderCell>
         <Cell align="center" dataKey="systolicBP" />
       </Column>
 
-      <Column flexGrow={100} sortable>
-        <HeaderCell align="center">
-          Diastolic <br /> BP
-        </HeaderCell>
+      <Column flexGrow={100}>
+        <HeaderCell align="center">Dia. BP</HeaderCell>
         <Cell align="center" dataKey="diastolicBP" />
       </Column>
 
-      <Column flexGrow={100} sortable>
-        <HeaderCell align="center">Temperature</HeaderCell>
+      <Column flexGrow={100}>
+        <HeaderCell align="center">Temp.</HeaderCell>
         <Cell align="center" dataKey="temperature" />
       </Column>
 
-      <Column flexGrow={100} sortable>
+      <Column flexGrow={100}>
         <HeaderCell align="center">LOC</HeaderCell>
         <Cell align="center" dataKey="avpuScore" />
       </Column>
