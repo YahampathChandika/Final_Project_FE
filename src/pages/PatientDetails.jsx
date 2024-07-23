@@ -40,6 +40,9 @@ export default function PatientDetails() {
   const patientData = data?.payload?.patient;
   const patientAlerts = data?.payload?.alerts;
   const patientCondition = data?.payload?.condition;
+  const frequency = data?.payload?.frequency;
+  const response = data?.payload?.response;
+  const score = data?.payload?.score;
   const borderlineAlerts = patientAlerts?.borderlineAlerts || [];
   const criticalAlerts = patientAlerts?.criticalAlerts || [];
 
@@ -358,6 +361,33 @@ export default function PatientDetails() {
           </div>
           <div className="flex-col w-full bg-white rounded-md justify-between items-center py-6 px-5 mt-10">
             <div className="flex w-full justify-between">
+              <p className="font-semibold text-base 2xl:text-lg">Monitoring</p>
+              <div className="flex items-center text-txtblue font-medium text-base 2xl:text-lg">
+                <span className="material-symbols-outlined mr-2">
+                  monitor_heart
+                </span>
+                NEWS |{" "}
+                {score === "N/A" ? "N/A" : score < 10 ? `0${score}` : score}
+              </div>
+            </div>
+            <Divider className="text-txtgray !mt-3 !mb-5" />
+            <div className="flex-col justify-between items-center bg-bggray rounded-md p-4 mt-5">
+              <div className="flex-col justify-between">
+                <p className="font-medium text-sm 2xl:text-base">Frequency</p>
+                <p className="text-txtgray text-sm 2xl:text-base font-medium">
+                  {frequency}
+                </p>
+              </div>
+              <div className="flex-col mt-5 justify-between">
+                <p className="font-medium text-sm 2xl:text-base">Response</p>
+                <p className="text-txtgray text-sm 2xl:text-base font-medium">
+                  {response}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="flex-col w-full bg-white rounded-md justify-between items-center py-6 px-5 mt-10">
+            <div className="flex w-full justify-between">
               <p className="font-semibold text-lg">Medical Records</p>
               <div className="flex items-center text-txtblue text-base font-medium cursor-pointer">
                 <span className="material-symbols-outlined mr-1">note_add</span>
@@ -365,19 +395,6 @@ export default function PatientDetails() {
               </div>
             </div>
             <Divider className="text-txtgray !mt-3 !mb-5" />
-            <div className="flex-col justify-between items-center bg-bggray rounded-md p-4 mt-5">
-              <p className="text-txtgray font-medium">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc eu
-                placerat ipsum, vitae rhoncus nisl. Donec et facilisis mauris.
-                Mauris consequat dapibus tellus sit amet auctor.
-              </p>
-              <div className="flex justify-between items-center mt-4">
-                <p className="text-txtdarkblue font-semibold">
-                  08/12/2024 | 14:25
-                </p>
-                <p className="text-txtdarkblue font-semibold">Dr. John</p>
-              </div>
-            </div>
             <div className="flex-col justify-between items-center bg-bggray rounded-md p-4 mt-5">
               <p className="text-txtgray font-medium">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc eu
