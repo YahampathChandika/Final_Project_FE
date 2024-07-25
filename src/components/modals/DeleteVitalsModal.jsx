@@ -2,25 +2,26 @@ import React from "react";
 import { Modal, Divider } from "rsuite";
 import Swal from "sweetalert2";
 
-function FailModal({
+function DeleteVitalsModal({
   open,
   handleClose,
   headtxt,
   bodytxt,
   btntxt,
   id,
+  otherId,
   deleteApi,
   refetchTable,
   otherRefetch,
 }) {
   const handleDelete = async () => {
     try {
-      const response = await deleteApi(id);
+      const response = await deleteApi({ vitalSignId: id, patientId: otherId });
       if (response.error) {
         console.log("error");
         Swal.fire({
           title: "Oops...",
-          text: response?.error?.data?.payload,
+          text: response.error.data.payload,
           icon: "error",
         });
       } else {
@@ -37,14 +38,19 @@ function FailModal({
         });
         Toast.fire({
           icon: "success",
-          title: response?.data?.payload,
+          title: response.data.payload,
         });
         await refetchTable();
         await otherRefetch();
         handleClose();
       }
-    } catch {
-      console.log("Error During the Delete");
+    } catch (error) {
+      console.error("Error during delete:", error);
+      Swal.fire({
+        title: "Error",
+        text: "An error occurred during the deletion process.",
+        icon: "error",
+      });
     }
   };
 
@@ -81,4 +87,4 @@ function FailModal({
   );
 }
 
-export default FailModal;
+export default DeleteVitalsModal;

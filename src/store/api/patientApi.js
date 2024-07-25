@@ -54,6 +54,13 @@ export const allpatientApi = api.injectEndpoints({
       query: (PatientId) => `vitals/${PatientId}`,
     }),
 
+    deleteVitalSigns: build.mutation({
+      query: ({ vitalSignId, patientId }) => ({
+        url: `vitals/deleteVitalSign/${vitalSignId}/${patientId}`,
+        method: "DELETE",
+      }),
+    }),
+
     dischargePatient: build.mutation({
       query: (id) => ({
         url: `patient/dischargePatient/${id}`,
@@ -81,6 +88,7 @@ export const {
   useGetPatientByIdQuery,
   useAddVitalSignsMutation,
   useGetPatientVitalsIdQuery,
+  useDeleteVitalSignsMutation,
   useDischargePatientMutation,
   useReAdmitPatientMutation,
 } = allpatientApi;

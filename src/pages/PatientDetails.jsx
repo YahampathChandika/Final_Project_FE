@@ -329,7 +329,6 @@ export default function PatientDetails() {
                 )}
               </div>
             ))}
-
             {borderlineAlerts?.map((alert, index) => (
               <div key={index}>
                 {Object.values(alert).map(
@@ -358,10 +357,48 @@ export default function PatientDetails() {
                 )}
               </div>
             ))}
+            {!(patientAlerts?.totalAlertCount) && (
+              <p className="text-txtgray text-sm 2xl:text-base font-medium text-center">
+                No current alerts
+              </p>
+            )}
           </div>
           <div className="flex-col w-full bg-white rounded-md justify-between items-center py-6 px-5 mt-10">
             <div className="flex w-full justify-between">
-              <p className="font-semibold text-base 2xl:text-lg">Monitoring</p>
+              <div className="flex items-center">
+                <span
+                  className={`material-symbols-outlined mr-2 ${
+                    patientCondition === "High Risk"
+                      ? "text-red"
+                      : patientCondition === "Medium Risk"
+                      ? "text-yellow"
+                      : patientCondition === "Low Risk"
+                      ? "text-green"
+                      : ""
+                  }`}
+                >
+                  {patientCondition === "High Risk"
+                    ? "error"
+                    : patientCondition === "Medium Risk"
+                    ? "sync_problem"
+                    : patientCondition === "Low Risk"
+                    ? "check_circle"
+                    : ""}
+                </span>
+                <span
+                  className={`text-lg font-medium ${
+                    patientCondition === "High Risk"
+                      ? "text-red"
+                      : patientCondition === "Medium Risk"
+                      ? "text-yellow"
+                      : patientCondition === "Low Risk"
+                      ? "text-green"
+                      : ""
+                  }`}
+                >
+                  {patientCondition}
+                </span>
+              </div>
               <div className="flex items-center text-txtblue font-medium text-base 2xl:text-lg">
                 <span className="material-symbols-outlined mr-2">
                   monitor_heart
