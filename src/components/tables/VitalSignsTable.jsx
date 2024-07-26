@@ -98,7 +98,8 @@ export default function VitalSignsTable({ startDate, endDate }) {
   return (
     <>
       <Table
-        height={420}
+        // height={420}
+        height={1000}
         data={getData()}
         sortColumn={sortColumn}
         sortType={sortType}
