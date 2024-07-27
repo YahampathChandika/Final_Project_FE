@@ -39,12 +39,14 @@ export default function PatientDetails() {
 
   const patientData = data?.payload?.patient;
   const patientAlerts = data?.payload?.alerts;
-  const patientCondition = data?.payload?.condition;
-  const frequency = data?.payload?.frequency;
-  const response = data?.payload?.response;
-  const score = data?.payload?.score;
+  const patientCondition = data?.payload?.instructions?.condition;
+  const frequency = data?.payload?.instructions?.frequency;
+  const response = data?.payload?.instructions?.response;
+  const score = data?.payload?.instructions?.score;
   const borderlineAlerts = patientAlerts?.borderlineAlerts || [];
   const criticalAlerts = patientAlerts?.criticalAlerts || [];
+  const riskStatus = data?.payload?.risks?.riskStatus;
+  const abnormalChanges = data?.payload?.risks?.abnormalChanges;
 
   const calculateAge = (dateOfBirth) => {
     const birthDate = moment(dateOfBirth);
@@ -357,7 +359,7 @@ export default function PatientDetails() {
                 )}
               </div>
             ))}
-            {!(patientAlerts?.totalAlertCount) && (
+            {!patientAlerts?.totalAlertCount && (
               <p className="text-txtgray text-sm 2xl:text-base font-medium text-center">
                 No current alerts
               </p>
@@ -416,13 +418,121 @@ export default function PatientDetails() {
                 </p>
               </div>
               <div className="flex-col mt-5 justify-between">
-                <p className="font-medium text-sm 2xl:text-base">Response</p>
+                <p className="font-medium text-sm 2xl:text-base">Actions</p>
                 <p className="text-txtgray text-sm 2xl:text-base font-medium">
                   {response}
                 </p>
               </div>
             </div>
           </div>
+          {riskStatus != null && (
+            <div className="flex-col w-full bg-white rounded-md justify-between items-center py-6 px-5 mt-10">
+              <div className="flex w-full justify-between">
+                <p className="font-semibold text-lg">Health Risk Predictions</p>
+                <div className="flex items-center text-txtblue text-base font-medium cursor-pointer">
+                  <span className="material-symbols-outlined mr-1">
+                    assignment_late
+                  </span>{" "}
+                  | 0
+                  {
+                    Object.keys(riskStatus).filter(
+                      (key) => riskStatus[key].risk
+                    ).length
+                  }
+                </div>
+              </div>
+              <Divider className="text-txtgray !mt-3 !mb-5" />
+              {Object.keys(riskStatus).filter((key) => riskStatus[key].risk)
+                .length === 0 ? (
+                <p className="font-medium text-sm 2xl:text-base">
+                  No health risk predictions
+                </p>
+              ) : (
+                Object.keys(riskStatus).map(
+                  (key) =>
+                    riskStatus[key].risk && (
+                      <div
+                        key={key}
+                        className="flex-col justify-between items-center bg-bggray rounded-md p-4 mt-5"
+                      >
+                        <div className="flex justify-between">
+                          <p className="font-medium text-sm 2xl:text-base">
+                            {riskStatus[key].name}
+                          </p>
+                          <p className="text-txtgray text-sm 2xl:text-base font-medium">
+                            {riskStatus[key].level}
+                          </p>
+                        </div>
+                      </div>
+                    )
+                )
+              )}
+            </div>
+          )}
+
+          {abnormalChanges != null && (
+            <div className="flex-col w-full bg-white rounded-md justify-between items-center py-6 px-5 mt-10">
+              <div className="flex w-full justify-between">
+                <p className="font-semibold text-lg">Abnormal Changes</p>
+                <div className="flex items-center text-txtblue text-base font-medium cursor-pointer">
+                  <span className="material-symbols-outlined mr-1">
+                    monitoring
+                  </span>{" "}
+                  |{" "}
+                  {
+                    Object.keys(abnormalChanges).filter(
+                      (key) =>
+                        abnormalChanges[key].increase ||
+                        abnormalChanges[key].decrease
+                    ).length
+                  }
+                </div>
+              </div>
+              <Divider className="text-txtgray !mt-3 !mb-5" />
+              <div className="flex-col justify-between items-center bg-bggray rounded-md p-4 mt-5">
+                {Object.keys(abnormalChanges).filter(
+                  (key) =>
+                    abnormalChanges[key].increase ||
+                    abnormalChanges[key].decrease
+                ).length === 0 ? (
+                  <p className="font-medium text-sm 2xl:text-base text-center">
+                    No abnormal changes
+                  </p>
+                ) : (
+                  Object.keys(abnormalChanges).map(
+                    (key) =>
+                      (abnormalChanges[key].increase ||
+                        abnormalChanges[key].decrease) && (
+                        <div
+                          key={key}
+                          className="flex justify-between items-center"
+                        >
+                          <p className="font-medium text-sm 2xl:text-base">
+                            {abnormalChanges[key].name}
+                          </p>
+                          <div className="flex items-center">
+                            {abnormalChanges[key].increase && (
+                              <span className="material-symbols-outlined text-red mr-1">
+                                trending_up
+                              </span>
+                            )}
+                            {abnormalChanges[key].decrease && (
+                              <span className="material-symbols-outlined text-yellow mr-1">
+                                trending_down
+                              </span>
+                            )}
+                            <p className="text-txtgray text-sm 2xl:text-base font-medium">
+                              {abnormalChanges[key].details}
+                            </p>
+                          </div>
+                        </div>
+                      )
+                  )
+                )}
+              </div>
+            </div>
+          )}
+
           <div className="flex-col w-full bg-white rounded-md justify-between items-center py-6 px-5 mt-10">
             <div className="flex w-full justify-between">
               <p className="font-semibold text-lg">Medical Records</p>
