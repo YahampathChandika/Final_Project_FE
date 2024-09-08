@@ -1,32 +1,106 @@
 import React, { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { Divider, Modal } from "rsuite";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateField } from "@mui/x-date-pickers/DateField";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { FormHelperText } from "@mui/material";
 import UserDetails from "../components/common/UserDetails";
-import { DateRangePicker, Divider } from "rsuite";
-import VitalSignsTable from "../components/tables/VitalSignsTable";
+import { useGetAvailableBedsQuery } from "../store/api/dropDownApi";
+import {
+  useCreatePatientMutation,
+  useGetAdmittedPatientsQuery,
+  useGetPatientListQuery,
+} from "../store/api/patientApi";
+
+const schema = yup.object().shape({
+  firstName: yup.string().required("First Name is required"),
+  lastName: yup.string().required("Last Name is required"),
+  dateOfBirth: yup.date().required("Birthday is required"),
+  gender: yup.string().required("Gender is required"),
+  address: yup.string().required("Address is required"),
+  contactNo: yup.string().required("Contact No is required"),
+  guardianName: yup.string().required("Guardian's Name is required"),
+  bedId: yup.string().required("Bed No is required"),
+  bloodGroup: yup.string().required("Blood Group is required"),
+  diagnosis: yup.string().required("Diagnosis is required"),
+});
 
 export default function Profile() {
-  const [activeTab, setActiveTab] = useState("upcoming");
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const { data: bedsData } = useGetAvailableBedsQuery();
+  const [addPatient] = useCreatePatientMutation();
+  const { refetch: refetchAll } = useGetPatientListQuery();
+  const { refetch: refetchAdmitted } = useGetAdmittedPatientsQuery();
 
-  const handleDateChange = (value) => {
-    if (value) {
-      setStartDate(value[0]);
-      setEndDate(value[1]);
-    } else {
-      setStartDate(new Date());
-      setEndDate(new Date());
+  const beds = bedsData?.payload || [];
+
+  console.log("Patient", bedsData);
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = async (data) => {
+    const formattedData = {
+      ...data,
+      hospitalId: "1",
+      nic: "981234567V",
+    };
+
+    try {
+      const response = await addPatient(formattedData);
+
+      if (response.data && !response.data.error) {
+        reset();
+        refetchAdmitted();
+        refetchAll();
+        handleClose();
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "success",
+          title: "Patient Registered Successfully",
+        });
+      } else {
+        console.log("User adding failed", response);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text:
+            response?.error?.data?.payload ||
+            response?.data?.payload ||
+            "user registration failed",
+        });
+      }
+    } catch (error) {
+      console.error("Patient Registration Error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "An unexpected error occurred",
+      });
     }
-  };
-  
-  const tabIndicatorStyles = {
-    position: "absolute",
-    top: "0",
-    bottom: "0",
-    width: "50%",
-    backgroundColor: "#5A81FA",
-    borderRadius: "9999px",
-    transition: "transform 0.3s ease-in-out",
-    transform: activeTab === "upcoming" ? "translateX(0)" : "translateX(100%)",
   };
 
   return (
@@ -34,162 +108,323 @@ export default function Profile() {
       <div className="pb-10 flex justify-between">
         <div className="flex items-center mb-5">
           <span className="material-symbols-outlined text-black font-semibold">
-            person
+            person_add
           </span>
-          <p className="text-2xl font-bold ml-4">Users</p>
+          <p className="text-2xl font-bold ml-4">Patient Registration</p>
         </div>
         <UserDetails />
       </div>
-      <div className="flex w-full space-x-10">
-        <div className="flex-col w-3/4">
-          <div className="flex-col w-full bg-white rounded-md justify-between items-center py-6 mb-10">
-            <div className="flex w-full justify-between items-center pl-10 pb-3">
-              <div className="flex-col justify-center items-start w-1/5">
-                <p className="text-txtgray">Hospital ID</p>
-                <p className="text-lg font-medium mt-2">1003</p>
-              </div>
-              <div className="flex-col justify-center items-start w-1/5">
-                <p className="text-txtgray">Name</p>
-                <p className="text-lg font-medium mt-2">1003</p>
-              </div>
-              <div className="flex-col justify-center items-start w-1/5">
-                <p className="text-txtgray">Age</p>
-                <p className="text-lg font-medium mt-2">1003</p>
-              </div>
-              <div className="flex-col justify-center items-start w-1/5">
-                <p className="text-txtgray">Gender</p>
-                <p className="text-lg font-medium mt-2">1003</p>
-              </div>
-            </div>
-            <div className="flex w-full justify-between items-center pl-10 pt-3">
-              <div className="flex-col justify-center items-start w-1/5">
-                <p className="text-txtgray">Diagnosis</p>
-                <p className="text-lg font-medium mt-2">1003</p>
-              </div>
-              <div className="flex-col justify-center items-start w-1/5">
-                <p className="text-txtgray">Blood Group</p>
-                <p className="text-lg font-medium mt-2">1003</p>
-              </div>
-              <div className="flex-col justify-center items-start w-1/5">
-                <p className="text-txtgray">Condition</p>
-                <p className="text-lg font-medium mt-2">1003</p>
-              </div>
-              <div className="flex-col justify-center items-start w-1/5">
-                <p className="text-txtgray">Guardian's TP</p>
-                <p className="text-lg font-medium mt-2">1003</p>
-              </div>
-            </div>
-          </div>
-          <div className="flex-col w-full bg-white rounded-md justify-between items-center">
-            <div className="flex items-center justify-between my-6 px-8 pt-5 ">
-              <div className="flex justify-center bg-bggray border py-1 pr-2  rounded-full  w-4/12 items-center">
-                <div className="relative bg-bggray rounded-full p-1 w-full">
-                  <div style={tabIndicatorStyles}></div>
-                  <button
-                    className={`relative z-10 px-4 py-2 rounded-full font-medium focus:outline-none w-1/2 transition duration-300 ${
-                      activeTab === "upcoming" ? "text-white" : "text-txtgray"
-                    }`}
-                    onClick={() => setActiveTab("upcoming")}
-                  >
-                    Table View
-                  </button>
-                  <button
-                    className={`relative z-10 px-4 py-2 rounded-full font-medium focus:outline-none w-1/2 transition duration-300 ${
-                      activeTab === "past" ? "text-white" : "text-txtgray"
-                    }`}
-                    onClick={() => setActiveTab("past")}
-                  >
-                    Chart View
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex items-center text-txtblue text-xl  font-medium cursor-pointer">
-                <DateRangePicker
-                  value={[startDate, endDate]}
-                  onChange={handleDateChange}
-                  showOneCalendar
-                  showHeader={false}
-                  className="border-none"
+      <div className="flex-col w-full bg-white rounded-md justify-between items-center py-6 mb-10">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex w-full mt-8 px-10">
+            <p className="text-semibold text-lg w-28">Patient</p>
+            <div className="flex-col w-full ml-10">
+              <div className="flex space-x-10">
+                <Controller
+                  name="firstName"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      id="outlined-basic name"
+                      label="First Name"
+                      variant="outlined"
+                      className="!mb-2 w-full"
+                      error={!!errors.firstName}
+                      helperText={
+                        errors.firstName ? errors.firstName.message : ""
+                      }
+                    />
+                  )}
                 />
-                <span className="material-symbols-outlined mr-2 ml-10">
-                  heart_plus
-                </span>
-                Add New
+                <Controller
+                  name="lastName"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      id="outlined-basic"
+                      label="Last Name"
+                      variant="outlined"
+                      className="!mb-5 w-full"
+                      error={!!errors.lastName}
+                      helperText={
+                        errors.lastName ? errors.lastName.message : ""
+                      }
+                    />
+                  )}
+                />
+              </div>
+              <div className="flex justify-between space-x-10">
+                <div className="w-full">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={["DateField", "DateField"]}>
+                      <Controller
+                        name="dateOfBirth"
+                        control={control}
+                        defaultValue={null}
+                        render={({ field }) => (
+                          <DateField
+                            {...field}
+                            label="Birthday"
+                            className="!w-full !mb-5"
+                            format="YYYY-MM-DD"
+                            error={!!errors.dateOfBirth}
+                            helperText={
+                              errors.dateOfBirth
+                                ? errors.dateOfBirth.message
+                                : " "
+                            }
+                          />
+                        )}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                </div>
+
+                <Controller
+                  name="gender"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <FormControl
+                      className="w-full !mb-5"
+                      error={!!errors.gender}
+                    >
+                      <InputLabel id="demo-simple-select-label">
+                        Gender
+                      </InputLabel>
+                      <Select
+                        {...field}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        label="Gender"
+                      >
+                        <MenuItem value={"Male"}>Male</MenuItem>
+                        <MenuItem value={"Female"}>Female</MenuItem>
+                      </Select>
+                      {errors.gender && (
+                        <FormHelperText>{errors.gender.message}</FormHelperText>
+                      )}
+                    </FormControl>
+                  )}
+                />
+              </div>
+              <div className="flex space-x-10">
+                <Controller
+                  name="address"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      id="outlined-basic"
+                      label="Address"
+                      variant="outlined"
+                      className="!mb-4 w-full"
+                      error={!!errors.address}
+                      helperText={errors.address ? errors.address.message : ""}
+                    />
+                  )}
+                />
+                <Controller
+                  name="contactNo"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      id="outlined-basic"
+                      label="Contact No"
+                      variant="outlined"
+                      className="!mb-5 w-full"
+                      error={!!errors.contactNo}
+                      helperText={
+                        errors.contactNo ? errors.contactNo.message : ""
+                      }
+                    />
+                  )}
+                />
               </div>
             </div>
-            <VitalSignsTable/>
           </div>
-        </div>
-        <div className="flex-col w-1/4">
-          <div className="flex-col w-full bg-white rounded-md justify-between items-center p-6">
-            <div className="flex w-full justify-between">
-              <p className="font-semibold text-lg">Alerts</p>
-              <div className="flex items-center text-txtblue text-lg font-medium">
-                <span className="material-symbols-outlined mr-2">
-                  notifications_active
-                </span>
-                {/* Alerts | {patient.alerts === "N/A" ? "00" : patient.alerts} */}
-                02
+          <Divider className="text-txtgray !mt-2 !mx-10 " />
+          <div className="flex w-full mt-8 px-10">
+            <p className="text-semibold text-lg w-28">Guardian</p>
+            <div className="flex-col w-full ml-10">
+              <div className="flex space-x-10">
+                <Controller
+                  name="guardianName"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      id="outlined-basic name"
+                      label="Full Name"
+                      variant="outlined"
+                      className="!mb-5 w-full"
+                      error={!!errors.guardianName}
+                      helperText={
+                        errors.guardianName ? errors.guardianName.message : ""
+                      }
+                    />
+                  )}
+                />
               </div>
-            </div>
-            <Divider className="text-txtgray !mt-3 !mb-5" />
-            <div className="flex justify-between">
-              <div className="flex">
-                <span className="material-symbols-outlined text-red">
-                  keyboard_double_arrow_up
-                </span>
-                <p className="font-medium	ml-2">Blood Pressure</p>
-              </div>
-              <p className=" text-txtgray font-medium	ml-2">160 mmHg</p>
-            </div>
-            <div className="flex mt-4 justify-between">
-              <div className="flex">
-                <span className="material-symbols-outlined text-yellow">
-                  keyboard_double_arrow_down
-                </span>
-                <p className="font-medium	ml-2">Heart Rate</p>
-              </div>
-              <p className=" text-txtgray font-medium	ml-2">40 BPM</p>
-            </div>
-          </div>
-          <div className="flex-col w-full bg-white rounded-md justify-between items-center py-6 px-5 mt-10">
-            <div className="flex w-full justify-between">
-              <p className="font-semibold text-lg">Medical Records</p>
-              <div className="flex items-center text-txtblue text-base  font-medium cursor-pointer">
-                <span className="material-symbols-outlined mr-1">note_add</span>
-                Add Record
-              </div>
-            </div>
-            <Divider className="text-txtgray !mt-3 !mb-5" />
-            <div className="flex-col justify-between items-center bg-bggray rounded-md p-4 mt-5">
-              <p className="text-txtgray font-medium">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc eu
-                placerat ipsum, vitae rhoncus nisl. Donec et facilisis mauris.
-                Mauris consequat dapibus tellus sit amet auctor.
-              </p>
-              <div className="flex justify-between items-center mt-4">
-                <p className="text-txtdarkblue font-semibold">
-                  08/12/2024 | 14:25
-                </p>
-                <p className="text-txtdarkblue font-semibold">Dr. John</p>
-              </div>
-            </div>
-            <div className="flex-col justify-between items-center bg-bggray rounded-md p-4 mt-5">
-              <p className="text-txtgray font-medium">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc eu
-                placerat ipsum, vitae rhoncus nisl. Donec et facilisis mauris.
-                Mauris consequat dapibus tellus sit amet auctor.
-              </p>
-              <div className="flex justify-between items-center mt-4">
-                <p className="text-txtdarkblue font-semibold">
-                  08/12/2024 | 14:25
-                </p>
-                <p className="text-txtdarkblue font-semibold">Dr. John</p>
+              <div className="flex space-x-10">
+                <Controller
+                  name="guardianAddress"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      id="outlined-basic"
+                      label="Address"
+                      variant="outlined"
+                      className="!mb-4 w-full"
+                      error={!!errors.address}
+                      helperText={errors.address ? errors.address.message : ""}
+                    />
+                  )}
+                />
+                <Controller
+                  name="guardianContactNo"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      id="outlined-basic"
+                      label="Contact No"
+                      variant="outlined"
+                      className="!mb-5 w-full"
+                      error={!!errors.contact}
+                      helperText={errors.contact ? errors.contact.message : ""}
+                    />
+                  )}
+                />
               </div>
             </div>
           </div>
-        </div>
+          <Divider className="text-txtgray !mt-2 w-11/12 !mx-auto" />
+          <div className="flex w-full mt-8 px-10">
+            <p className="text-semibold text-lg w-28">Medical</p>
+            <div className="flex-col w-full ml-10">
+              <div className="flex space-x-10">
+                <Controller
+                  name="bedId"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <FormControl
+                      className="w-full !mb-5"
+                      error={!!errors.bedId}
+                    >
+                      <InputLabel id="demo-simple-select-label" className="">
+                        Bed No
+                      </InputLabel>
+                      <Select
+                        {...field}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        label="Bed No"
+                      >
+                        {beds.map((bed) => (
+                          <MenuItem key={bed.id} value={bed.id}>
+                            {bed.bedNo}
+                          </MenuItem>
+                        ))}
+                      </Select>
+
+                      {errors.bedId && (
+                        <FormHelperText>{errors.bedId.message}</FormHelperText>
+                      )}
+                    </FormControl>
+                  )}
+                />
+                <Controller
+                  name="bloodGroup"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <FormControl
+                      className="w-full !mb-5"
+                      error={!!errors.gender}
+                    >
+                      <InputLabel id="demo-simple-select-label" className="">
+                        Blood Group
+                      </InputLabel>
+                      <Select
+                        {...field}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        label="Blood Group"
+                      >
+                        <MenuItem value={"A+"}>A+</MenuItem>
+                        <MenuItem value={"A-"}>A-</MenuItem>
+                        <MenuItem value={"B+"}>B+</MenuItem>
+                        <MenuItem value={"B-"}>B-</MenuItem>
+                        <MenuItem value={"O+"}>O+</MenuItem>
+                        <MenuItem value={"O-"}>O-</MenuItem>
+                        <MenuItem value={"AB+"}>AB+</MenuItem>
+                        <MenuItem value={"AB-"}>AB-</MenuItem>
+                      </Select>
+
+                      {errors.gender && (
+                        <FormHelperText>
+                          {errors.bloodGroup.message}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  )}
+                />
+              </div>
+              <div className="flex-col w-full text-right">
+                <Controller
+                  name="diagnosis"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      id="outlined-basic"
+                      label="diagnosis"
+                      variant="outlined"
+                      className="!mb-5 w-full"
+                      error={!!errors.diagnosis}
+                      helperText={
+                        errors.diagnosis ? errors.diagnosis.message : ""
+                      }
+                    />
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+          <Divider className="text-txtgray !mt-2 w-11/12 !mx-auto" />
+          <div className="w-full flex flex-row justify-end mt-8 mb-4 px-10">
+            <button
+              type="button"
+              onClick={() => {
+                handleClose();
+                reset();
+              }}
+              className="w-1/2 h-11 rounded-md mr-4 border-solid border border-slate-300 hover:bg-slate-200 transition-all duration-300"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="w-1/2 h-11 rounded-md bg-blue-700 text-white hover:bg-blue-800 transition-all duration-300"
+            >
+              Register
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

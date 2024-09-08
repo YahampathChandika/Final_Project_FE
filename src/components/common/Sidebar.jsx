@@ -116,12 +116,12 @@ function SidebarComp() {
               }
               icon={
                 <span className="material-symbols-outlined sidebar-icon">
-                  account_circle
+                  person_add
                 </span>
               }
               onClick={() => handleMenuItemClick("profile")}
             >
-              Profile
+              Registration
             </MenuItem>
           </div>
         </Menu>
