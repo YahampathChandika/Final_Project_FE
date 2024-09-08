@@ -442,31 +442,33 @@ export default function PatientDetails() {
                 </div>
               </div>
               <Divider className="text-txtgray !mt-3 !mb-5" />
-              {Object.keys(riskStatus).filter((key) => riskStatus[key].risk)
-                .length === 0 ? (
-                <p className="font-medium text-sm 2xl:text-base">
-                  No health risk predictions
-                </p>
-              ) : (
-                Object.keys(riskStatus).map(
-                  (key) =>
-                    riskStatus[key].risk && (
-                      <div
-                        key={key}
-                        className="flex-col justify-between items-center bg-bggray rounded-md p-4 mt-5"
-                      >
-                        <div className="flex justify-between">
-                          <p className="font-medium text-sm 2xl:text-base">
-                            {riskStatus[key].name}
-                          </p>
-                          <p className="text-txtgray text-sm 2xl:text-base font-medium">
-                            {riskStatus[key].level}
-                          </p>
+              <div className="flex-col justify-between items-center bg-bggray rounded-md p-4 mt-5">
+                {Object.keys(riskStatus).filter((key) => riskStatus[key].risk)
+                  .length === 0 ? (
+                  <p className="font-medium text-sm 2xl:text-base text-center">
+                    No health risk predictions
+                  </p>
+                ) : (
+                  Object.keys(riskStatus).map(
+                    (key) =>
+                      riskStatus[key].risk && (
+                        <div
+                          key={key}
+                          className="flex-col justify-between items-center"
+                        >
+                          <div className="flex justify-between">
+                            <p className="font-medium text-sm 2xl:text-base">
+                              {riskStatus[key].name}
+                            </p>
+                            <p className="text-txtgray text-sm 2xl:text-base font-medium">
+                              {riskStatus[key].level}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    )
-                )
-              )}
+                      )
+                  )
+                )}
+              </div>
             </div>
           )}
 
@@ -478,7 +480,7 @@ export default function PatientDetails() {
                   <span className="material-symbols-outlined mr-1">
                     monitoring
                   </span>{" "}
-                  |{" "}
+                  | 0
                   {
                     Object.keys(abnormalChanges).filter(
                       (key) =>
@@ -522,7 +524,7 @@ export default function PatientDetails() {
                               </span>
                             )}
                             <p className="text-txtgray text-sm 2xl:text-base font-medium">
-                              {abnormalChanges[key].details}
+                              {abnormalChanges[key].details} %
                             </p>
                           </div>
                         </div>

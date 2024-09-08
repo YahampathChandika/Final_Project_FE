@@ -107,11 +107,11 @@ export default function Users() {
               </InputGroup.Addon>
             </InputGroup>
             <Row
-              className="min-w-48 flex ml-8 items-center cursor-pointer"
+              className="min-w-48 flex ml-20 items-center cursor-pointer"
               onClick={handleUserModalOpen}
             >
-              <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue mr-3 ml-6">
-                add_circle
+              <span className="material-symbols-outlined sidebar-icon text-2xl font-medium text-txtdarkblue mr-3 ml-6">
+                person_add
               </span>
               <p className="text-lg font-medium text-txtdarkblue">
                 Add New User

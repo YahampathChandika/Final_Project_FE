@@ -48,8 +48,8 @@ export default function OverviewPieChart({ onClickSlice }) {
       setChartData({
         series: [
           patientData.payload.stablePatients,
-          patientData.payload.criticalPatients,
           patientData.payload.unstablePatients,
+          patientData.payload.criticalPatients,
         ],
         options: {
           ...chartData.options,

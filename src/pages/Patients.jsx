@@ -49,7 +49,7 @@ export default function Patients() {
     <Container className="w-full">
       <Row className="pb-10 flex justify-between">
         <Row className="flex items-center mb-5">
-          <span className="material-symbols-outlined sidebar-icon text-black">
+          <span className="material-symbols-outlined text-black">
             patient_list
           </span>
           <p className="text-2xl font-bold ml-4">Patients</p>
@@ -75,25 +75,36 @@ export default function Patients() {
             <InputGroup.Addon>
               {searchValue && (
                 <span
-                  className="material-symbols-outlined sidebar-icon text-lg font-medium text-red cursor-pointer mr-5"
+                  className="material-symbols-outlined text-lg font-medium text-red cursor-pointer mr-5"
                   onClick={handleClearSearch}
                 >
                   close
                 </span>
               )}
-              <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtdarkblue cursor-pointer">
+              <span className="material-symbols-outlined text-lg font-medium text-txtdarkblue cursor-pointer">
                 search
               </span>
             </InputGroup.Addon>
           </InputGroup>
-          <Row
+          {/* <Row
             className="group min-w-52 flex items-center justify-center cursor-pointer bg-transparent hover:bg-blue-500 text-blue-700 transition hover:scale-105 duration-300 hover:text-white py-2 border border-blue-500 hover:border-transparent rounded-md"
             onClick={handlePatientModalOpen}
           >
-            <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-blue-700 group-hover:text-white transition duration-300 mr-3 ">
+            <span className="material-symbols-outlined text-lg font-medium text-blue-700 group-hover:text-white transition duration-300 mr-3 ">
               add_circle
             </span>
             <p className="text-lg font-medium">
+              Add New Patient
+            </p>
+          </Row> */}
+          <Row
+            className="min-w-48 flex ml-20 items-center cursor-pointer"
+            onClick={handlePatientModalOpen}
+          >
+            <span className="material-symbols-outlined text-2xl font-medium text-txtdarkblue mr-3 ml-6">
+              outpatient_med
+            </span>
+            <p className="text-lg font-medium text-txtdarkblue">
               Add New Patient
             </p>
           </Row>

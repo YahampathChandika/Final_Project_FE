@@ -96,13 +96,15 @@ export default function Admitted() {
           </InputGroup.Addon>
         </InputGroup>
         <Row
-          className="group min-w-52 flex items-center cursor-pointer justify-center bg-white text-txtblue  hover:text-txtdarkblue hover:border-txtdarkblue hover:scale-105 transition duration-300 py-2 border border-txtblue rounded-md shadow"
+          className="min-w-48 flex ml-20 items-center cursor-pointer"
           onClick={handlePatientModalOpen}
         >
-          <span className="material-symbols-outlined sidebar-icon text-lg font-medium text-txtblue mr-3 group-hover:text-txtdarkblue group-hover:scale-105 transition duration-300">
-            add_circle
+          <span className="material-symbols-outlined text-2xl font-medium text-txtdarkblue mr-3 ml-6">
+            outpatient_med
           </span>
-          <p className="text-lg font-medium">Add New Patient</p>
+          <p className="text-lg font-medium text-txtdarkblue">
+            Add New Patient
+          </p>
         </Row>
       </Row>
 
