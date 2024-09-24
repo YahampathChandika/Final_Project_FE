@@ -4,11 +4,14 @@ import PatientsTable from "../components/tables/PatientsTable";
 import AddPatientModal from "../components/modals/AddPatientModal";
 import UserDetails from "../components/common/UserDetails";
 import { useGetPatientListQuery } from "../store/api/patientApi";
+import { useNavigate } from "react-router-dom";
 
 export default function Patients() {
   const { data: patientData, isLoading, error } = useGetPatientListQuery();
   const [patientModalOpen, setPatientModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+
+  const navigate = useNavigate();
 
   const handlePatientModalOpen = () => setPatientModalOpen(true);
   const handlePatientModalClose = () => setPatientModalOpen(false);
@@ -99,7 +102,8 @@ export default function Patients() {
           </Row> */}
           <Row
             className="min-w-48 flex ml-20 items-center cursor-pointer"
-            onClick={handlePatientModalOpen}
+            // onClick={handlePatientModalOpen} 
+            onClick={() => navigate("/home/register")}
           >
             <span className="material-symbols-outlined text-2xl font-medium text-txtdarkblue mr-3 ml-6">
               outpatient_med

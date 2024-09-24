@@ -38,7 +38,7 @@ export default function AddPatientModal({ open, handleClose }) {
   const { data: bedsData } = useGetAvailableBedsQuery();
   const [addPatient] = useCreatePatientMutation();
   const { refetch: refetchAll } = useGetPatientListQuery();
-  const { refetch: refetchAdmitted} = useGetAdmittedPatientsQuery();
+  const { refetch: refetchAdmitted } = useGetAdmittedPatientsQuery();
 
   const beds = bedsData?.payload;
   const {
@@ -117,7 +117,7 @@ export default function AddPatientModal({ open, handleClose }) {
             <div className="flex-col w-full ml-10">
               <div className="flex space-x-10">
                 <Controller
-                  name="firstName"
+                  name="name"
                   control={control}
                   defaultValue=""
                   render={({ field }) => (

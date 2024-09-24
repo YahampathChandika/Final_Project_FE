@@ -4,7 +4,7 @@ import Overview from "./pages/Overview";
 import Users from "./pages/Users";
 import Admitted from "./pages/Admitted";
 import Patients from "./pages/Patients";
-import Profile from "./pages/Profile";
+import Register from "./pages/Register";
 import Login from "./pages/Login";
 import PatientDetails from "./pages/PatientDetails";
 import PatientHistory from "./pages/PatientHistory";
@@ -19,7 +19,7 @@ function App() {
         <Route path="users" element={<Users />} />
         <Route path="admitted" element={<Admitted />} />
         <Route path="patients" element={<Patients />} />
-        <Route path="profile" element={<Profile />} />
+        <Route path="register" element={<Register />} />
         <Route path="patientDetails/:id" element={<PatientDetails />} />
         <Route path="patientHistory/:id" element={<PatientHistory />} />
       </Route>

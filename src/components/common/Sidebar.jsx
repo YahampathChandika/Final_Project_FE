@@ -119,9 +119,9 @@ function SidebarComp() {
                   person_add
                 </span>
               }
-              onClick={() => handleMenuItemClick("profile")}
+              onClick={() => handleMenuItemClick("register")}
             >
-              Registration
+              Register
             </MenuItem>
           </div>
         </Menu>

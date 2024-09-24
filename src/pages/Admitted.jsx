@@ -4,7 +4,7 @@ import UserDetails from "../components/common/UserDetails";
 import AddPatientModal from "../components/modals/AddPatientModal";
 import { useGetAdmittedPatientsQuery } from "../store/api/patientApi";
 import moment from "moment";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import noDataImage from "../assets/images/doctors.svg";
 
 export default function Admitted() {
@@ -13,7 +13,7 @@ export default function Admitted() {
   const handlePatientModalOpen = () => setPatientModalOpen(true);
   const handlePatientModalClose = () => setPatientModalOpen(false);
   const { data: patients } = useGetAdmittedPatientsQuery();
-
+  const navigate = useNavigate();
   const calculateAge = (dateOfBirth) => {
     const birthDate = moment(dateOfBirth);
     const today = moment();
@@ -97,7 +97,8 @@ export default function Admitted() {
         </InputGroup>
         <Row
           className="min-w-48 flex ml-20 items-center cursor-pointer"
-          onClick={handlePatientModalOpen}
+          // onClick={handlePatientModalOpen}
+          onClick={() => navigate("/home/register")}
         >
           <span className="material-symbols-outlined text-2xl font-medium text-txtdarkblue mr-3 ml-6">
             outpatient_med
