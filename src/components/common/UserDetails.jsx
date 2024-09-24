@@ -11,7 +11,7 @@ export default function UserDetails() {
   // Determine the base URL based on the environment
   const baseUrl = isLocalhost
     ? "http://localhost:4000"
-    : "http://44.204.115.155:4000"; // Replace with your hosted backend URL
+    : "//44.204.115.155:4000"; // Replace with your hosted backend URL
   
   // Convert image path based on the OS environment
   const imagePath = isLocalhost 
