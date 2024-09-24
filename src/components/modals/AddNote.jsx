@@ -1,31 +1,40 @@
 import React from "react";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Modal, Divider } from "rsuite";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import {
-  useDischargePatientMutation,
-  useGetAdmittedPatientsQuery,
+  useAddNotesMutation,
   useGetPatientByIdQuery,
-  useGetPatientListQuery,
 } from "../../store/api/patientApi";
-import { useGetAvailableBedsQuery } from "../../store/api/dropDownApi";
+import { useGetSignedUserQuery } from "../../store/api/userApi";
 
 function AddNote({ open, handleClose }) {
   const { id } = useParams();
-  const [discharge] = useDischargePatientMutation();
-  const { refetch: admittedRefetch } = useGetAdmittedPatientsQuery();
-  const { refetch: patientsRefetch } = useGetPatientListQuery();
-  const { refetch: bedsRefetch } = useGetAvailableBedsQuery();
+  const [addNotes] = useAddNotesMutation();
+  const { data: signedUser } = useGetSignedUserQuery();
   const { refetch: patientRefetch } = useGetPatientByIdQuery(id);
+  const name = signedUser?.payload?.firstName;
 
-  const handleDischarge = async (data) => {
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (formData) => {
     try {
-      const response = await discharge(id);
-      if (response.data && !response.data.error) {
-        admittedRefetch();
-        patientsRefetch();
-        bedsRefetch();
+      const submissionData = {
+        patientId: id,
+        name: name || "Unknown",
+        note: formData.note,
+      };
+      const response = await addNotes(submissionData);
+      if (response?.data && !response?.data?.error) {
         patientRefetch();
+        reset();
         handleClose();
         const Toast = Swal.mixin({
           toast: true,
@@ -40,25 +49,25 @@ function AddNote({ open, handleClose }) {
         });
         Toast.fire({
           icon: "success",
-          title: "Patient Discharged!",
+          title: "Record Added!",
         });
       } else {
-        console.log("Patient Discharging failed!", response);
+        console.log("Record Adding failed!", response);
         Swal.fire({
           title: "Oops...",
           text:
             response?.error?.data?.payload ||
             response?.data?.payload ||
-            "Failed to discharge patient!",
+            "Failed to add record!",
           icon: "error",
         });
       }
     } catch (error) {
-      console.error("Failed to discharge patient!", error);
+      console.error("Failed to add record!", error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Failed to discharge patient!",
+        text: "Failed to add record!",
       });
     }
   };
@@ -75,37 +84,38 @@ function AddNote({ open, handleClose }) {
           </div>
         </div>
         <Divider className="text-txtgray !mt-2 w-11/12 !mx-auto" />
-        {/* <div className="px-10">
-          <p className="text-txtgray font-medium text-lg my-3">
-            Are you sure you discharge this patient?
-          </p>
-        </div> */}
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-wrap items-center w-full px-5">
-            <textarea
-              className="px-5 w-full h-32 focus:outline-none"
-              id="note"
+            <Controller
               name="note"
-              placeholder="Enter note here..."
-            ></textarea>
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <textarea
+                  {...field}
+                  className="px-5 w-full h-32 focus:outline-none"
+                  placeholder="Enter note here..."
+                />
+              )}
+            />
           </div>
           <div className="flex flex-wrap items-center w-full mt-6"></div>
+          <div className="w-full flex justify-between mt-6 mb-4 px-10">
+            <button
+              type="button"
+              onClick={handleClose}
+              className="w-1/2 h-10 rounded-md mr-4 border-solid border border-slate-300 transition-transform duration-300 hover:scale-105"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="w-1/2 h-10 rounded-md bg-txtblue text-white transition-transform duration-300 hover:scale-105"
+            >
+              Add Record
+            </button>
+          </div>
         </form>
-        <div className="w-full flex justify-between mt-6 mb-4 px-10">
-          <button
-            type="button"
-            onClick={handleClose}
-            className="w-1/2 h-10 rounded-md mr-4 border-solid border border-slate-300 transition-transform duration-300 hover:scale-105"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleDischarge}
-            className="w-1/2 h-10 rounded-md bg-txtblue text-white transition-transform duration-300 hover:scale-105"
-          >
-            Add Record
-          </button>
-        </div>
       </Modal.Body>
     </Modal>
   );

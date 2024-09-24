@@ -75,6 +75,14 @@ export const allpatientApi = api.injectEndpoints({
         body: data,
       }),
     }),
+
+    addNotes: build.mutation({
+      query: (data) => ({
+        url: "patient/addNotes",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -91,4 +99,5 @@ export const {
   useDeleteVitalSignsMutation,
   useDischargePatientMutation,
   useReAdmitPatientMutation,
+  useAddNotesMutation,
 } = allpatientApi;

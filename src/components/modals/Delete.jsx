@@ -39,9 +39,9 @@ function FailModal({
           icon: "success",
           title: response?.data?.payload,
         });
+        handleClose();
         await refetchTable();
         await otherRefetch();
-        handleClose();
       }
     } catch {
       console.log("Error During the Delete");

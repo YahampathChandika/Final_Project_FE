@@ -13,6 +13,7 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 import Discharge from "../components/modals/Discharge";
 import ReAdmit from "../components/modals/ReAdmit";
 import AddNote from "../components/modals/AddNote";
+import { format } from "date-fns";
 
 export default function PatientDetails() {
   const [activeTab, setActiveTab] = useState("table");
@@ -51,6 +52,9 @@ export default function PatientDetails() {
   const criticalAlerts = patientAlerts?.criticalAlerts || [];
   const riskStatus = data?.payload?.risks?.riskStatus;
   const abnormalChanges = data?.payload?.risks?.abnormalChanges;
+  const notes = data?.payload?.notes || [];
+
+  console.log("notes: ", notes);
 
   const calculateAge = (dateOfBirth) => {
     const birthDate = moment(dateOfBirth);
@@ -539,7 +543,7 @@ export default function PatientDetails() {
             </div>
           )}
 
-          <div className="flex-col w-full bg-white rounded-md justify-between items-center py-6 px-5 mt-10">
+          {/* <div className="flex-col w-full bg-white rounded-md justify-between items-center py-6 px-5 mt-10">
             <div className="flex w-full justify-between">
               <p className="font-semibold text-lg">Medical Records</p>
               <div
@@ -564,11 +568,62 @@ export default function PatientDetails() {
                 <p className="text-txtdarkblue font-semibold">Dr. John</p>
               </div>
             </div>
+          </div> */}
+          <div className="flex-col w-full bg-white rounded-md justify-between items-center py-6 px-5 mt-10">
+            <div className="flex w-full justify-between">
+              <p className="font-semibold text-lg">Medical Records</p>
+              <div
+                className="flex items-center text-txtblue text-base font-medium cursor-pointer"
+                onClick={handleAddNoteModalOpen}
+              >
+                <span className="material-symbols-outlined mr-1">note_add</span>
+                Add Record
+              </div>
+            </div>
+            <Divider className="text-txtgray !mt-3 !mb-5" />
+            <div className="max-h-80 overflow-y-auto">
+              {/* Map through the notes array */}
+              {notes.length > 0 ? (
+                notes.map((note) => {
+                  const formattedDate = format(
+                    new Date(note.createdAt),
+                    "MM/dd/yyyy | HH:mm"
+                  );
+                  return (
+                    <div
+                      key={note.id}
+                      className="flex-col justify-between items-center bg-bggray rounded-md p-4 mt-5"
+                    >
+                      <p className="text-txtgray font-medium text-md">
+                        {note.note}
+                      </p>
+                      <div className="flex justify-between items-center mt-4">
+                        <p className="text-txtdarkblue font-semibold text-sm">
+                          {formattedDate}
+                        </p>
+                        <p className="text-txtdarkblue font-semibold text-sm">
+                          Dr. {note.name}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="flex-col justify-between items-center bg-bggray rounded-md p-4 mt-5">
+                  <p className="font-medium text-sm 2xl:text-base text-center">
+                    No medical records
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
       <AddVitalsModal open={userModalOpen} handleClose={handleUserModalClose} />
-      <Discharge open={dischargeModalOpen} handleClose={handleDischargeModalClose}/>
+      <Discharge
+        open={dischargeModalOpen}
+        handleClose={handleDischargeModalClose}
+      />
       <ReAdmit open={reAdmitModalOpen} handleClose={handleReAdmitModalClose} />
       <AddNote open={addNoteModalOpen} handleClose={handleAddNoteModalClose} />
     </div>

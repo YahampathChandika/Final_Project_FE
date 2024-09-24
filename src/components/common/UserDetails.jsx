@@ -11,15 +11,13 @@ export default function UserDetails() {
   // Determine the base URL based on the environment
   const baseUrl = isLocalhost
     ? "http://localhost:4000"
-    : "//44.204.115.155:4000"; // Replace with your hosted backend URL
+    : "http://44.204.115.155:4000"; // Replace with your hosted backend URL
   
   // Convert image path based on the OS environment
   const imagePath = isLocalhost 
     ? user?.image.replace(/\//g, "\\") // Convert to Windows-style backslashes locally
     : user?.image.replace(/\\/g, "/"); // Convert to Linux-style forward slashes for hosting
   
-  console.log("User", user);
-
   return (
     <div className="flex">
       <img
