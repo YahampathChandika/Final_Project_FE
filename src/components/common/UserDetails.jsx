@@ -4,6 +4,7 @@ import { useGetSignedUserQuery } from "../../store/api/userApi";
 export default function UserDetails() {
   const { data: signedUser } = useGetSignedUserQuery();
   const user = signedUser?.payload;
+  console.log("User", user)
   return (
     <div className="flex">
       <img
