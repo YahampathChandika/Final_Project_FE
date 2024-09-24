@@ -78,7 +78,7 @@ export default function UsersTable({ users }) {
     <Cell {...props}>
       <img
         // src={`http://localhost:4000/${rowData[dataKey]}`}
-        src={`http://44.204.115.155:4000/${rowData[dataKey]}`}
+        src={`//44.204.115.155:4000/${rowData[dataKey]}`}
         alt="Profile"
         style={{ width: 35, height: 35, borderRadius: "50%" }}
       />
