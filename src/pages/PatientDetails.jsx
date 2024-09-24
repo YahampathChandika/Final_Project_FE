@@ -12,12 +12,14 @@ import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import Discharge from "../components/modals/Discharge";
 import ReAdmit from "../components/modals/ReAdmit";
+import AddNote from "../components/modals/AddNote";
 
 export default function PatientDetails() {
   const [activeTab, setActiveTab] = useState("table");
   const [userModalOpen, setUserModalOpen] = useState(false);
   const [dischargeModalOpen, setDischargeModalOpen] = useState(false);
   const [reAdmitModalOpen, setReAdmitModalOpen] = useState(false);
+  const [addNoteModalOpen, setAddNoteModalOpen] = useState(false);
   const [dateRange, setDateRange] = useState([
     {
       startDate: null,
@@ -34,6 +36,8 @@ export default function PatientDetails() {
   const handleDischargeModalClose = () => setDischargeModalOpen(false);
   const handleReAdmitModalOpen = () => setReAdmitModalOpen(true);
   const handleReAdmitModalClose = () => setReAdmitModalOpen(false);
+  const handleAddNoteModalOpen = () => setAddNoteModalOpen(true);
+  const handleAddNoteModalClose = () => setAddNoteModalOpen(false);
   const { id } = useParams();
   const { data } = useGetPatientByIdQuery(id);
 
@@ -538,7 +542,10 @@ export default function PatientDetails() {
           <div className="flex-col w-full bg-white rounded-md justify-between items-center py-6 px-5 mt-10">
             <div className="flex w-full justify-between">
               <p className="font-semibold text-lg">Medical Records</p>
-              <div className="flex items-center text-txtblue text-base font-medium cursor-pointer">
+              <div
+                className="flex items-center text-txtblue text-base font-medium cursor-pointer"
+                onClick={handleAddNoteModalOpen}
+              >
                 <span className="material-symbols-outlined mr-1">note_add</span>
                 Add Record
               </div>
@@ -561,11 +568,9 @@ export default function PatientDetails() {
         </div>
       </div>
       <AddVitalsModal open={userModalOpen} handleClose={handleUserModalClose} />
-      <Discharge
-        open={dischargeModalOpen}
-        handleClose={handleDischargeModalClose}
-      />
+      <Discharge open={dischargeModalOpen} handleClose={handleDischargeModalClose}/>
       <ReAdmit open={reAdmitModalOpen} handleClose={handleReAdmitModalClose} />
+      <AddNote open={addNoteModalOpen} handleClose={handleAddNoteModalClose} />
     </div>
   );
 }
