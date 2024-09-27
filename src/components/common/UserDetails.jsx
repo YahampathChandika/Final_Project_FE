@@ -8,7 +8,8 @@ export default function UserDetails() {
   return (
     <div className="flex">
       <img
-        src={`http://localhost:4000/${user?.image}`}
+        src={`https://09bb-112-135-220-49.ngrok-free.app/${user?.image}`}
+        // src={`http://localhost:4000/${user?.image}`}
         // src={`http://44.204.115.155:4000/${user?.image}`}
         alt="Profile"
         className="w-12 h-12 rounded-full mr-5"

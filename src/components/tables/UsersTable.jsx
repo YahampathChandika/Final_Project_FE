@@ -77,7 +77,8 @@ export default function UsersTable({ users }) {
   const ImageCell = ({ rowData, dataKey, ...props }) => (
     <Cell {...props}>
       <img
-        src={`http://localhost:4000/${rowData[dataKey]}`}
+        src={`https://09bb-112-135-220-49.ngrok-free.app/${rowData[dataKey]}`}
+        // src={`http://localhost:4000/${rowData[dataKey]}`}
         alt="Profile"
         style={{ width: 35, height: 35, borderRadius: "50%" }}
       />
