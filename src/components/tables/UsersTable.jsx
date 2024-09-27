@@ -77,7 +77,7 @@ export default function UsersTable({ users }) {
   const ImageCell = ({ rowData, dataKey, ...props }) => (
     <Cell {...props}>
       <img
-        src={`${import.meta.env.BASE_URL}/${rowData[dataKey]}`}
+        src={`${import.meta.env.VITE_API_BASE_URL}/${rowData[dataKey]}`}
         // src={`http://localhost:4000/${rowData[dataKey]}`}
         alt="Profile"
         style={{ width: 35, height: 35, borderRadius: "50%" }}

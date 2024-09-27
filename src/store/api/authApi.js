@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const authApi = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.BASE_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_BASE_URL }),
   // baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:4000/" }),
   // baseQuery: fetchBaseQuery({ baseUrl: "http://44.204.115.155:4000/" }),
 

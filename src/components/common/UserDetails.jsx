@@ -4,11 +4,11 @@ import { useGetSignedUserQuery } from "../../store/api/userApi";
 export default function UserDetails() {
   const { data: signedUser } = useGetSignedUserQuery();
   const user = signedUser?.payload;
-  console.log("User", user)
+  console.log("User", user);
   return (
     <div className="flex">
       <img
-        src={`${import.meta.env.BASE_URL}/${user?.image}`}
+        src={`${import.meta.env.VITE_API_BASE_URL}/${user?.image}`}
         // src={`http://localhost:4000/${user?.image}`}
         // src={`http://44.204.115.155:4000/${user?.image}`}
         alt="Profile"
