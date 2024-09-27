@@ -10,7 +10,8 @@ export const api = createApi({
       const accessToken = localStorage.getItem("accessToken");
       // console.log("hello "+accessToken)
       if (accessToken) {
-        headers.set("Authorization", `Bearer ${accessToken}`);
+        headers.set("Authorization", `Bearer ${accessToken}`),
+        headers.set("ngrok-skip-browser-warning", "1");
       }
       return headers;
     },
