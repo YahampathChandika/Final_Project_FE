@@ -201,7 +201,7 @@ export default function Admitted() {
                   </span>
                 </div>
                 <div className="text-txtgray mt-2">
-                  Has abnormal condition in heart. Check BP regularly.
+                  Don't have any new notes about this patient.
                 </div>
               </div>
             </Link>
