@@ -112,7 +112,7 @@ export default function AddVitalsModal({ open, handleClose }) {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Heart Rate"
+                    label="Heart Rate (bpm)"
                     variant="outlined"
                     className="!my-5 w-full"
                   />
@@ -127,7 +127,7 @@ export default function AddVitalsModal({ open, handleClose }) {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Respiratory Rate"
+                    label="Respiratory Rate (bpm)"
                     variant="outlined"
                     className="!mb-5 w-full"
                   />
@@ -142,7 +142,7 @@ export default function AddVitalsModal({ open, handleClose }) {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Supplemental O2"
+                    label="Supplemental O2 (lpm)"
                     variant="outlined"
                     className="!mb-5 w-full"
                   />
@@ -157,7 +157,7 @@ export default function AddVitalsModal({ open, handleClose }) {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Oxygen Saturation"
+                    label="Oxygen Saturation (%)"
                     variant="outlined"
                     className="!mb-5 w-full"
                   />
@@ -172,7 +172,7 @@ export default function AddVitalsModal({ open, handleClose }) {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Diastolic BP"
+                    label="Diastolic BP (mm Hg)"
                     variant="outlined"
                     className="!mb-5 w-full"
                   />
@@ -187,7 +187,7 @@ export default function AddVitalsModal({ open, handleClose }) {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Systolic BP"
+                    label="Systolic BP (mm Hg)"
                     variant="outlined"
                     className="!mb-5 w-full"
                   />
@@ -202,7 +202,7 @@ export default function AddVitalsModal({ open, handleClose }) {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Temperature"
+                    label="Temperature (°F)"
                     variant="outlined"
                     className="!mb-5 w-full"
                   />
