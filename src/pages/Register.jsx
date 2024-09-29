@@ -20,18 +20,20 @@ import {
   useGetAdmittedPatientsQuery,
   useGetPatientListQuery,
 } from "../store/api/patientApi";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const schema = yup.object().shape({
-  name: yup.string().required("Name is required"),
-  lastName: yup.string().required("Last Name is required"),
+  firstName: yup.string().required("Name is required"),
   dateOfBirth: yup.date().required("Birthday is required"),
   gender: yup.string().required("Gender is required"),
   address: yup.string().required("Address is required"),
   contactNo: yup.string().required("Contact No is required"),
+  guardianContactNo: yup.string().required("Guardian's Contact No is required"),
   guardianName: yup.string().required("Guardian's Name is required"),
   bedId: yup.string().required("Bed No is required"),
   bloodGroup: yup.string().required("Blood Group is required"),
-  diagnosis: yup.string().required("Diagnosis is required"),
+  diagnosis: yup.string().required("Admission Diagnosis is required"),
 });
 
 export default function Register() {
@@ -39,10 +41,11 @@ export default function Register() {
   const [addPatient] = useCreatePatientMutation();
   const { refetch: refetchAll } = useGetPatientListQuery();
   const { refetch: refetchAdmitted } = useGetAdmittedPatientsQuery();
+  const { refetch: refetchBeds } = useGetAvailableBedsQuery();
 
+  const navigate = useNavigate();
   const beds = bedsData?.payload || [];
 
-  console.log("Patient", bedsData);
   const {
     handleSubmit,
     control,
@@ -52,21 +55,20 @@ export default function Register() {
     resolver: yupResolver(schema),
   });
 
+  console.log(errors); // Add this to catch any form validation errors
+
   const onSubmit = async (data) => {
-    const formattedData = {
-      ...data,
-      hospitalId: "1",
-      nic: "981234567V",
-    };
+    console.log("onSubmit", data);
 
     try {
-      const response = await addPatient(formattedData);
+      const response = await addPatient(data);
 
       if (response.data && !response.data.error) {
         reset();
         refetchAdmitted();
         refetchAll();
-        handleClose();
+        refetchBeds();
+        navigate("/home/admitted");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -121,7 +123,7 @@ export default function Register() {
             <div className="flex-col w-full ml-10">
               <div className="flex space-x-10">
                 <Controller
-                  name="name"
+                  name="firstName"
                   control={control}
                   defaultValue=""
                   render={({ field }) => (
@@ -131,26 +133,18 @@ export default function Register() {
                       label="Name"
                       variant="outlined"
                       className="!mb-2 w-full"
-                      error={!!errors.name}
-                      helperText={errors.name ? errors.name.message : ""}
+                      error={!!errors.firstName}
+                      helperText={
+                        errors.firstName ? errors.firstName.message : ""
+                      }
                     />
                   )}
                 />
-                <Controller
-                  name="bht"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic"
-                      label="BHT"
-                      variant="outlined"
-                      className="!mb-5 w-full"
-                      error={!!errors.bht}
-                      helperText={errors.bht ? errors.bht.message : ""}
-                    />
-                  )}
+                <TextField
+                  id="outlined-basic"
+                  label="BHT"
+                  variant="outlined"
+                  className="!mb-5 w-full"
                 />
               </div>
               <div className="flex justify-between space-x-10">
@@ -269,25 +263,11 @@ export default function Register() {
                     />
                   )}
                 />
-                <Controller
-                  name="guardianRelation"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic"
-                      label="Relation"
-                      variant="outlined"
-                      className="!mb-4 w-full"
-                      error={!!errors.guardianRelation}
-                      helperText={
-                        errors.guardianRelation
-                          ? errors.guardianRelation.message
-                          : ""
-                      }
-                    />
-                  )}
+                <TextField
+                  id="outlined-basic"
+                  label="Relation"
+                  variant="outlined"
+                  className="!mb-4 w-full"
                 />
               </div>
               <div className="flex space-x-10">
@@ -318,8 +298,12 @@ export default function Register() {
                       label="Contact No"
                       variant="outlined"
                       className="!mb-5 w-full"
-                      error={!!errors.contact}
-                      helperText={errors.contact ? errors.contact.message : ""}
+                      error={!!errors.guardianContactNo}
+                      helperText={
+                        errors.guardianContactNo
+                          ? errors.guardianContactNo.message
+                          : ""
+                      }
                     />
                   )}
                 />
@@ -332,7 +316,7 @@ export default function Register() {
             <div className="flex-col w-full ml-10">
               <div className="flex space-x-10">
                 <Controller
-                  name="admissionDiagnosis"
+                  name="diagnosis"
                   control={control}
                   defaultValue=""
                   render={({ field }) => (
@@ -342,89 +326,49 @@ export default function Register() {
                       label="Admission Diagnosis"
                       variant="outlined"
                       className="!mb-5 w-full"
-                      error={!!errors.admissionDiagnosis}
+                      error={!!errors.diagnosis}
                       helperText={
-                        errors.admissionDiagnosis
-                          ? errors.admissionDiagnosis.message
-                          : ""
+                        errors.diagnosis ? errors.diagnosis.message : ""
                       }
                     />
                   )}
                 />
-                <Controller
-                  name="otherDiagnoses"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic name"
-                      label="Other Diagnoses"
-                      variant="outlined"
-                      className="!mb-5 w-full"
-                      error={!!errors.otherDiagnoses}
-                      helperText={
-                        errors.otherDiagnoses
-                          ? errors.otherDiagnoses.message
-                          : ""
-                      }
-                    />
-                  )}
+                <TextField
+                  id="outlined-basic name"
+                  label="Other Diagnoses"
+                  variant="outlined"
+                  className="!mb-5 w-full"
                 />
               </div>
               <div className="flex space-x-10">
-                <Controller
-                  name="guardianAddress"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic"
-                      label="Brief history of current illness"
-                      variant="outlined"
-                      className="!mb-4 w-full"
-                    />
-                  )}
+                <TextField
+                  id="outlined-basic"
+                  label="Brief history of current illness"
+                  variant="outlined"
+                  className="!mb-4 w-full"
                 />
               </div>
               <div className="flex space-x-10">
-                <Controller
-                  name="coMorbidities"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic name"
-                      label="Co-Morbidities"
-                      variant="outlined"
-                      className="!mb-5 w-full"
-                    />
-                  )}
+                <TextField
+                  id="outlined-basic name"
+                  label="Co-Morbidities"
+                  variant="outlined"
+                  className="!mb-5 w-full"
                 />
-                <Controller
-                  name="prevAdmissions"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <FormControl className="w-full !mb-5">
-                      <InputLabel id="demo-simple-select-label">
-                        Previous ICU Admissions
-                      </InputLabel>
-                      <Select
-                        {...field}
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        label="Previous ICU Admissions"
-                      >
-                        <MenuItem value={"Yes"}>Yes</MenuItem>
-                        <MenuItem value={"No"}>No</MenuItem>
-                        <MenuItem value={"Don't Know"}>Don't Know</MenuItem>
-                      </Select>
-                    </FormControl>
-                  )}
-                />
+                <FormControl className="w-full !mb-5">
+                  <InputLabel id="demo-simple-select-label">
+                    Previous ICU Admissions
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Previous ICU Admissions"
+                  >
+                    <MenuItem value={"Yes"}>Yes</MenuItem>
+                    <MenuItem value={"No"}>No</MenuItem>
+                    <MenuItem value={"Don't Know"}>Don't Know</MenuItem>
+                  </Select>
+                </FormControl>
               </div>
               <div className="flex space-x-10">
                 <Controller
@@ -434,7 +378,7 @@ export default function Register() {
                   render={({ field }) => (
                     <FormControl
                       className="w-full !mb-5"
-                      error={!!errors.gender}
+                      error={!!errors.bloodGroup}
                     >
                       <InputLabel id="demo-simple-select-label" className="">
                         Blood Group
@@ -454,8 +398,7 @@ export default function Register() {
                         <MenuItem value={"AB+"}>AB+</MenuItem>
                         <MenuItem value={"AB-"}>AB-</MenuItem>
                       </Select>
-
-                      {errors.gender && (
+                      {errors.bloodGroup && (
                         <FormHelperText>
                           {errors.bloodGroup.message}
                         </FormHelperText>
@@ -463,222 +406,112 @@ export default function Register() {
                     </FormControl>
                   )}
                 />
-                <Controller
-                  name="married"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <FormControl className="w-full !mb-5">
-                      <InputLabel id="demo-simple-select-label">
-                        Married
-                      </InputLabel>
-                      <Select
-                        {...field}
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        label="Married"
-                      >
-                        <MenuItem value={"Yes"}>Yes</MenuItem>
-                        <MenuItem value={"No"}>No</MenuItem>
-                      </Select>
-                    </FormControl>
-                  )}
+                <FormControl className="w-full !mb-5">
+                  <InputLabel id="demo-simple-select-label">Married</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Married"
+                  >
+                    <MenuItem value={"Yes"}>Yes</MenuItem>
+                    <MenuItem value={"No"}>No</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="flex space-x-10">
+                <FormControl className="w-full !mb-5">
+                  <InputLabel id="demo-simple-select-label">Alcohol</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Alcohol"
+                  >
+                    <MenuItem value={"Yes"}>Yes</MenuItem>
+                    <MenuItem value={"No"}>No</MenuItem>
+                  </Select>
+                </FormControl>
+                <FormControl className="w-full !mb-5">
+                  <InputLabel id="demo-simple-select-label">Smoker</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Smoker"
+                  >
+                    <MenuItem value={"Yes"}>Yes</MenuItem>
+                    <MenuItem value={"No"}>No</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="flex space-x-10">
+                <TextField
+                  id="outlined-basic name"
+                  label="UOP (Last 24hrs)"
+                  variant="outlined"
+                  className="!mb-5 w-full"
+                />
+                <TextField
+                  id="outlined-basic name"
+                  label="Fluid Intake (Last 24hrs)"
+                  variant="outlined"
+                  className="!mb-5 w-full"
                 />
               </div>
               <div className="flex space-x-10">
-                <Controller
-                  name="alcohol"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <FormControl className="w-full !mb-5">
-                      <InputLabel id="demo-simple-select-label">
-                        Alcohol
-                      </InputLabel>
-                      <Select
-                        {...field}
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        label="Alcohol"
-                      >
-                        <MenuItem value={"Yes"}>Yes</MenuItem>
-                        <MenuItem value={"No"}>No</MenuItem>
-                      </Select>
-                    </FormControl>
-                  )}
+                <TextField
+                  id="outlined-basic name"
+                  label="Current Meds"
+                  variant="outlined"
+                  className="!mb-5 w-full"
                 />
-                <Controller
-                  name="smoker"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <FormControl className="w-full !mb-5">
-                      <InputLabel id="demo-simple-select-label">
-                        Smoker
-                      </InputLabel>
-                      <Select
-                        {...field}
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        label="Smoker"
-                      >
-                        <MenuItem value={"Yes"}>Yes</MenuItem>
-                        <MenuItem value={"No"}>No</MenuItem>
-                      </Select>
-                    </FormControl>
-                  )}
+                <TextField
+                  id="outlined-basic name"
+                  label="Allergies"
+                  variant="outlined"
+                  className="!mb-5 w-full"
                 />
               </div>
               <div className="flex space-x-10">
-                <Controller
-                  name="uop"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic name"
-                      label="UOP (Last 24hrs)"
-                      variant="outlined"
-                      className="!mb-5 w-full"
-                    />
-                  )}
+                <TextField
+                  id="outlined-basic name"
+                  label="Other disciplines reffered"
+                  variant="outlined"
+                  className="!mb-5 w-full"
                 />
-                <Controller
-                  name="fluidIntake"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic name"
-                      label="Fluid Intake (Last 24hrs)"
-                      variant="outlined"
-                      className="!mb-5 w-full"
-                    />
-                  )}
+                <TextField
+                  id="outlined-basic name"
+                  label="Procedures"
+                  variant="outlined"
+                  className="!mb-5 w-full"
                 />
               </div>
               <div className="flex space-x-10">
-                <Controller
-                  name="currentMeds"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic name"
-                      label="Current Meds"
-                      variant="outlined"
-                      className="!mb-5 w-full"
-                    />
-                  )}
+                <TextField
+                  id="outlined-basic name"
+                  label="Problem List"
+                  variant="outlined"
+                  className="!mb-5 w-full"
                 />
-                <Controller
-                  name="allergies"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic name"
-                      label="Allergies"
-                      variant="outlined"
-                      className="!mb-5 w-full"
-                    />
-                  )}
+                <TextField
+                  id="outlined-basic name"
+                  label="Plan by medical team"
+                  variant="outlined"
+                  className="!mb-5 w-full"
                 />
               </div>
               <div className="flex space-x-10">
-                <Controller
-                  name="currentMeds"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic name"
-                      label="Other disciplines reffered"
-                      variant="outlined"
-                      className="!mb-5 w-full"
-                    />
-                  )}
-                />
-                <Controller
-                  name="allergies"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic name"
-                      label="Procedures"
-                      variant="outlined"
-                      className="!mb-5 w-full"
-                    />
-                  )}
+                <TextField
+                  id="outlined-basic"
+                  label="Summary of key investigations"
+                  variant="outlined"
+                  className="!mb-4 w-full"
                 />
               </div>
               <div className="flex space-x-10">
-                <Controller
-                  name="currentMeds"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic name"
-                      label="Problem List"
-                      variant="outlined"
-                      className="!mb-5 w-full"
-                    />
-                  )}
-                />
-                <Controller
-                  name="allergies"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic name"
-                      label="Plan by medical team"
-                      variant="outlined"
-                      className="!mb-5 w-full"
-                    />
-                  )}
-                />
-              </div>
-              <div className="flex space-x-10">
-                <Controller
-                  name="guardianAddress"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic"
-                      label="Summary of key investigations"
-                      variant="outlined"
-                      className="!mb-4 w-full"
-                    />
-                  )}
-                />
-              </div>
-              <div className="flex space-x-10">
-                <Controller
-                  name="guardianAddress"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic"
-                      label="Summary of management"
-                      variant="outlined"
-                      className="!mb-4 w-full"
-                    />
-                  )}
+                <TextField
+                  id="outlined-basic"
+                  label="Summary of management"
+                  variant="outlined"
+                  className="!mb-4 w-full"
                 />
               </div>
             </div>
@@ -719,19 +552,11 @@ export default function Register() {
                     </FormControl>
                   )}
                 />
-                <Controller
-                  name="guardianAddress"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="outlined-basic"
-                      label="Special Notes"
-                      variant="outlined"
-                      className="!mb-4 w-full"
-                    />
-                  )}
+                <TextField
+                  id="outlined-basic"
+                  label="Special Notes"
+                  variant="outlined"
+                  className="!mb-4 w-full"
                 />
               </div>
             </div>
@@ -741,8 +566,7 @@ export default function Register() {
             <button
               type="button"
               onClick={() => {
-                handleClose();
-                reset();
+                console.log("Cancel");
               }}
               className="w-4/12 h-11 rounded-md mr-4 border-solid border border-slate-300 hover:bg-slate-200 transition-all duration-300"
             >

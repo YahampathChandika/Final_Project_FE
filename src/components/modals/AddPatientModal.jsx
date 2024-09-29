@@ -51,14 +51,15 @@ export default function AddPatientModal({ open, handleClose }) {
   });
 
   const onSubmit = async (data) => {
-    const formattedData = {
-      ...data,
-      hospitalId: "1",
-      nic: "981234567V",
-    };
+    console.log("onSubmit", data);
+    // const formattedData = {
+    //   ...data,
+    //   hospitalId: "1",
+    //   nic: "981234567V",
+    // };
 
     try {
-      const response = await addPatient(formattedData);
+      const response = await addPatient(data);
 
       if (response.data && !response.data.error) {
         reset();
@@ -117,7 +118,7 @@ export default function AddPatientModal({ open, handleClose }) {
             <div className="flex-col w-full ml-10">
               <div className="flex space-x-10">
                 <Controller
-                  name="name"
+                  name="firstName"
                   control={control}
                   defaultValue=""
                   render={({ field }) => (

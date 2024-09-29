@@ -155,7 +155,7 @@ export default function UsersTable({ users }) {
           <Cell dataKey="speciality" />
         </Column>
 
-        <Column flexGrow={120} sortable>
+        <Column flexGrow={120}>
           <HeaderCell>Actions</HeaderCell>
           <ActionCell />
         </Column>

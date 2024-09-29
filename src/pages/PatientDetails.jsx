@@ -54,8 +54,6 @@ export default function PatientDetails() {
   const abnormalChanges = data?.payload?.risks?.abnormalChanges;
   const notes = data?.payload?.notes || [];
 
-  console.log("notes: ", notes);
-
   const calculateAge = (dateOfBirth) => {
     const birthDate = moment(dateOfBirth);
     const today = moment();

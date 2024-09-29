@@ -25,6 +25,7 @@ function AddNote({ open, handleClose }) {
   } = useForm();
 
   const onSubmit = async (formData) => {
+    console.log("note", formData)
     try {
       const submissionData = {
         patientId: id,

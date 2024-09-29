@@ -9,7 +9,6 @@ import { useGetAdmittedPatientsQuery } from "../store/api/patientApi";
 
 export default function Overview() {
   const [selectedRisk, setSelectedRisk] = useState(null);
-  console.log(selectedRisk)
   const { data: patientData, isLoading, error } = useGetAdmittedPatientsQuery();
   const { data: signedUser } = useGetSignedUserQuery();
   const user = signedUser?.payload;
