@@ -23,6 +23,7 @@ function FailModal({
           text: response?.error?.data?.payload,
           icon: "error",
         });
+        handleClose();
       } else {
         const Toast = Swal.mixin({
           toast: true,
